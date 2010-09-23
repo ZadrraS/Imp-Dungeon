@@ -1,0 +1,6 @@
+Imp Dungeon is a simplistic multiplayer roguelike done as an
+assignment for Computer Networks class at my university.
+
+When completed it'll be composed of a C++ server/client as well
+as a nearly identical version of the same in Java.
+

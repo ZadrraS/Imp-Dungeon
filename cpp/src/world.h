@@ -1,12 +1,13 @@
 #ifndef IMPDUNGEON_WORLD_H_
 #define IMPDUNGEON_WORLD_H_
 
-#include "Map.h"
-#include "EntityManager.h"
 #include <vector>
 #include <queue>
 
 #include <boost/unordered_map.hpp>
+
+#include "map.h"
+#include "entity_manager.h"
 
 namespace impdungeon {
 

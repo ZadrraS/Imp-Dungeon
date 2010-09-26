@@ -1,32 +1,32 @@
-#include "EntityManager.h"
+#include "entity_manager.h"
 
-#include <boost/uuid/uuid_generators.hpp>
+#include "entity.h"
 
 namespace impdungeon {
 
-EntityFactory::EntityFactory() {
+EntityManager::EntityManager() {
 
 }
 
-EntityFactory::~EntityFactory() {
+EntityManager::~EntityManager() {
 
 }
 
-boost::uuids::uuid &EntityFactory::GenerateEntity(
-    std::string &name,
-    BoundedAttribute &health) {
-  Entity *new_entity = new Entity(boost::uuids::random_generator(), name, health);
+const boost::uuids::uuid EntityManager::GenerateEntity(
+    const std::string &name,
+    const BoundedAttribute &health) {
+  Entity *new_entity = new Entity(uuid_generator_(), name, health);
   entities_[new_entity->id()] = new_entity;
 
   return new_entity->id();
 }
 
-void EntityFactory::DestroyEntity(boost::uuids::uuid &id) {
+void EntityManager::DestroyEntity(const boost::uuids::uuid &id) {
   entities_.erase(id);
   //  TODO(ZadrraS): Make this not explode in your face when handed a bad id.
 }
 
-Entity *EntityFactory::entity(boost::uuids::uuid &id) const {
+Entity *EntityManager::entity(const boost::uuids::uuid &id) {
   return entities_[id];
   //  TODO(ZadrraS): Make this return NULL if a bad id is passed.
 }

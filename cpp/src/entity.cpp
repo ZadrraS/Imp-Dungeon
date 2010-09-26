@@ -1,8 +1,10 @@
-#include "Entity.h"
+#include "entity.h"
 
 namespace impdungeon {
 
-Entity::Entity(boost::uuids::uuid id, std::string &name, BoundedAttribute &health)
+Entity::Entity(const boost::uuids::uuid &id, 
+               const std::string &name, 
+               const BoundedAttribute &health)
   : id_(id),
     name_(name),
     health_(health) {
@@ -13,7 +15,7 @@ Entity::~Entity() {
 }
 
 void Entity::Damage(int amount) {
-  health -= amount;
+  health_ -= amount;
 }
 
 boost::uuids::uuid Entity::id() const {

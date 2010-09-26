@@ -1,6 +1,7 @@
-#include "Map.h"
+#include "map.h"
 
-#include <ifstream>
+#include <fstream>
+#include <iostream>
 
 namespace impdungeon {
 
@@ -13,20 +14,21 @@ Map::~Map() {
     delete [] tiles_;
 }
 
-void Map::Init(std::string file_name) {
-  std::ifstream file(file_name, std::ifstream::in);
-  file >> width_ >> height_;
-  tiles = new Tile [width_ * height_];
+void Map::Init(const std::string &file_name) {
+  std::ifstream map_file(file_name.c_str());
+
+  map_file >> width_ >> height_;
+  tiles_ = new Tile [width_ * height_];
   for (int y = 0; y < height_; y++) {
     for (int x = 0; x < width_; x++) {
       char tile_rep;
-      file >> tile_rep;
+      map_file >> tile_rep;
       if (tile_rep == '#')
-         tiles[y * width_ + x] = WALL;
+         tiles_[y * width_ + x] = WALL;
       else if (tile_rep == '~')
-        tiles[y * width_ + x] = WATER;
+        tiles_[y * width_ + x] = WATER;
       else
-        tiles[y * width_ + x] = GROUND;
+        tiles_[y * width_ + x] = GROUND;
 
       //  TODO(ZadrraS): Error checking
     }
@@ -34,7 +36,7 @@ void Map::Init(std::string file_name) {
 }
 
 bool Map::IsPassable(const Position &position) const {
-  if (tiles(position) != GROUND)
+  if (tile(position) != GROUND)
     return true;
 
   return false;
@@ -46,7 +48,7 @@ Tile Map::tile(const Position &position) const {
     return tiles_[position.y() * width_ + position.x()];
   }
   else {
-    //  TODO(ZadrraS): Throw exception LOL
+    return NON_TILE;
   }
 }
 

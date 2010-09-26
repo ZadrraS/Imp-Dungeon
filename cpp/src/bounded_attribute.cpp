@@ -1,4 +1,4 @@
- #include "BoundedAttribute.h"
+ #include "bounded_attribute.h"
 
 namespace impdungeon {
 
@@ -17,11 +17,11 @@ BoundedAttribute::~BoundedAttribute() {
 }
 
 int BoundedAttribute::value() {
-  return value;
+  return value_;
 }
 
 int BoundedAttribute::bound() {
-  return bound;
+  return bound_;
 }
 
 BoundedAttribute BoundedAttribute::operator+(int arg) {

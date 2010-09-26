@@ -1,4 +1,4 @@
-#include "World.h"
+#include "world.h"
 
 namespace impdungeon {
 
@@ -11,7 +11,7 @@ World::~World() {
 }
 
 void World::Init() {
-  map.Init("map.txt");
+  map_.Init("../map.txt");
 }
 
 void World::Run() {

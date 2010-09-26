@@ -1,7 +1,11 @@
 #ifndef IMPDUNGEON_ENTITY_H_
 #define IMPDUNGEON_ENTITY_H_
 
+#include <string>
+
 #include <boost/uuid/uuid.hpp>
+
+#include "bounded_attribute.h"
 
 namespace impdungeon {
 
@@ -11,7 +15,7 @@ namespace impdungeon {
 ---------------------*/
 class Entity {
   public:
-    Entity(boost::uuids::uuid id, std::string &name, BoundedAttribute &health);
+    Entity(const boost::uuids::uuid &id, const std::string &name, const BoundedAttribute &health);
     virtual ~Entity();
 
     void Damage(int amount);
@@ -25,7 +29,7 @@ class Entity {
 
     std::string name_;
     BoundedAttribute health_;
-    Inventory inventory_;
+    //Inventory inventory_;
 
 };
 

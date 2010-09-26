@@ -1,4 +1,4 @@
-#include "Position.h"
+#include "position.h"
 
 namespace impdungeon {
 
@@ -15,11 +15,11 @@ Position::~Position() {
 }
 
 void Position::set_x(int x) {
-  this.x_ = x;
+  this->x_ = x;
 }
 
 void Position::set_y(int y) {
-  this.y_ = y;
+  this->y_ = y;
 }
 
 int Position::x() const {
@@ -31,12 +31,12 @@ int Position::y() const {
 }
 
 Position Position::operator+(const Position &arg) {
-  Position new_position(this.x_ + arg.x_, this.y_ + arg.y_);
+  Position new_position(this->x_ + arg.x_, this->y_ + arg.y_);
   return new_position;
 }
 
 Position Position::operator-(const Position &arg) {
-  Position new_position(this.x_ - arg.x_, this.y_ - arg.y_);
+  Position new_position(this->x_ - arg.x_, this->y_ - arg.y_);
   return new_position;
 }
 
@@ -46,13 +46,13 @@ Position &Position::operator=(const Position &arg) {
   return *this;
 }
 
-Position &Position::operator+=(Position &arg) {
+Position &Position::operator+=(const Position &arg) {
   x_ += arg.x_;
   y_ += arg.y_;
   return *this;
 }
 
-Position &Position::operator-=(Position &arg) {
+Position &Position::operator-=(const Position &arg) {
   x_ -= arg.x_;
   y_ -= arg.y_;
   return *this;

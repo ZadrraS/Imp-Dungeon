@@ -18,12 +18,12 @@ class Position {
     int x() const;
     int y() const;
 
-    Position operator+(Position &arg);
-    Position operator-(Position &arg);
-    Position &operator=(Position &arg);
-    Position &operator+=(Position &arg);
-    Position &operator-=(Position &arg);
-    bool operator==(Position &arg)
+    Position operator+(const Position &arg);
+    Position operator-(const Position &arg);
+    Position &operator=(const Position &arg);
+    Position &operator+=(const Position &arg);
+    Position &operator-=(const Position &arg);
+    bool operator==(const Position &arg);
 
   private:
     int x_, y_;

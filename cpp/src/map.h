@@ -2,11 +2,13 @@
 #define IMPDUNGEON_MAP_H_
 
 #include <string>
-#include "Position.h"
+
+#include "position.h"
 
 namespace impdungeon {
 
 enum Tile {
+  NON_TILE,
   GROUND,
   WATER,
   WALL
@@ -20,7 +22,7 @@ class Map {
     Map();
     virtual ~Map();
 
-    void Init(std::string file_name);
+    void Init(const std::string &file_name);
 
     bool IsPassable(const Position &position) const;
     Tile tile(const Position &position) const;

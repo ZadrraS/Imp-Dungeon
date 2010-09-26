@@ -2,8 +2,14 @@
 #define IMPDUNGEON_ENTITYMANAGER_H_
 
 #include <boost/unordered_map.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+
+#include "bounded_attribute.h"
 
 namespace impdungeon {
+
+class Entity;
 
 /*-------------------
 * An Entity factory and manager, enabling entities to be created, destroyed
@@ -11,16 +17,18 @@ namespace impdungeon {
 ---------------------*/
 class EntityManager {
   public:
-    EntityFactory();
-    virtual ~EntityFactory();
+    EntityManager();
+    virtual ~EntityManager();
 
-    boost::uuids::uuid &GenerateEntity(std::string &name, BoundedAttribute &health);
-    void DestroyEntity(boost::uuids::uuid &id);
+    const boost::uuids::uuid GenerateEntity(const std::string &name, const BoundedAttribute &health);
+    void DestroyEntity(const boost::uuids::uuid &id);
 
-    Entity *entity(boost::uuids::uuid &id) const;
+    Entity *entity(const boost::uuids::uuid &id);
 
   private:
     boost::unordered_map<boost::uuids::uuid, Entity *> entities_;
+
+    boost::uuids::random_generator uuid_generator_;
 
 };
 

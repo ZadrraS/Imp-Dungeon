@@ -29,7 +29,6 @@ class Entity {
 
     std::string name_;
     BoundedAttribute health_;
-    //Inventory inventory_;
 
 };
 

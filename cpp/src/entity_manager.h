@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_ENTITYMANAGER_H_
-#define IMPDUNGEON_ENTITYMANAGER_H_
+#ifndef IMPDUNGEON_ENTITY_MANAGER_H_
+#define IMPDUNGEON_ENTITY_MANAGER_H_
 
 #include <boost/unordered_map.hpp>
 #include <boost/uuid/uuid.hpp>

@@ -7,7 +7,7 @@
 #include <boost/unordered_map.hpp>
 
 #include "map.h"
-#include "entity_manager.h"
+#include "entitymanager.h"
 
 namespace impdungeon {
 

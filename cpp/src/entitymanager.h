@@ -1,11 +1,11 @@
-#ifndef IMPDUNGEON_ENTITY_MANAGER_H_
-#define IMPDUNGEON_ENTITY_MANAGER_H_
+#ifndef IMPDUNGEON_ENTITYMANAGER_H_
+#define IMPDUNGEON_ENTITYMANAGER_H_
 
 #include <boost/unordered_map.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include "bounded_attribute.h"
+#include "boundedattribute.h"
 
 namespace impdungeon {
 

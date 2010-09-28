@@ -5,7 +5,7 @@
 
 #include <boost/uuid/uuid.hpp>
 
-#include "bounded_attribute.h"
+#include "boundedattribute.h"
 
 namespace impdungeon {
 

@@ -20,8 +20,8 @@ class EntityManager {
     EntityManager();
     virtual ~EntityManager();
 
-    const boost::uuids::uuid GenerateEntity(const std::string &name, const BoundedAttribute &health);
-    void DestroyEntity(const boost::uuids::uuid &id);
+    const boost::uuids::uuid SpawnEntity(Entity *entity);
+    void DespawnEntity(const boost::uuids::uuid &id);
 
     Entity *entity(const boost::uuids::uuid &id);
 

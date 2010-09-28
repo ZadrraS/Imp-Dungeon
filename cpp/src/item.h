@@ -7,6 +7,9 @@
 
 namespace impdungeon {
 
+/*-------------------
+* The Item class is the base class for all items in the game.
+---------------------*/
 class Item {
   public:
     Item(const boost::uuids::uuid &id, const std::string &name, int value, 

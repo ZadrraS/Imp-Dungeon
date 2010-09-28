@@ -15,10 +15,12 @@ namespace impdungeon {
 ---------------------*/
 class Entity {
   public:
-    Entity(const boost::uuids::uuid &id, const std::string &name, const BoundedAttribute &health);
+    Entity(const std::string &name, const BoundedAttribute &health);
     virtual ~Entity();
 
     void Damage(int amount);
+
+    void AssignId(const boost::uuids::uuid &id);
 
     boost::uuids::uuid id() const;
     std::string name() const;

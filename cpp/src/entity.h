@@ -20,7 +20,9 @@ class Entity {
 
     void Damage(int amount);
 
-    void AssignId(const boost::uuids::uuid &id);
+    // Assigns an id to an entity. This can be done only once.
+    // Returns false if the entity already has an id attached.
+    bool AssignId(const boost::uuids::uuid &id);
 
     boost::uuids::uuid id() const;
     std::string name() const;

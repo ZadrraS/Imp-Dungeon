@@ -3,8 +3,9 @@
 int main(int argc, char *argv[]) {
   impdungeon::World world;
 
-  world.Init();
+  world.Init("map.txt", "entities.json");
   world.Run();
 
+  world.Destroy();
   return 0;
 }

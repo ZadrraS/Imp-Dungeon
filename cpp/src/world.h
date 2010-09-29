@@ -19,12 +19,14 @@ class World {
     World();
     virtual ~World();
 
-    void Init();
+    void Init(const std::string &map_file_name, 
+              const std::string &entity_file_name);
     void Run();
+    void Destroy();
 
   private:
     Map map_;
-    boost::unordered_map<Entity *, Position> entities_;
+    boost::unordered_map<Entity *, Position *> entities_;
     EntityManager entity_manager_;
 
     std::queue <Event *> events_;

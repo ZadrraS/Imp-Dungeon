@@ -18,10 +18,12 @@ void Entity::Damage(int amount) {
   health_ -= amount;
 }
 
-void Entity::AssignId(const boost::uuids::uuid &id) {
+bool Entity::AssignId(const boost::uuids::uuid &id) {
   if (id_.is_nil()) {
     id_ = id;
+    return true;
   }
+  return false;
 }
 
 boost::uuids::uuid Entity::id() const {

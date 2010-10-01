@@ -12,7 +12,7 @@ namespace impdungeon {
 class Entity;
 
 /*-------------------
-* An Entity factory and manager, enabling entities to be created, destroyed
+* An Entity manager, enabling entities to be registered in the game, destroyed 
 * and accessed. Entities are indexed and refered to by their unique id's.
 ---------------------*/
 class EntityManager {
@@ -20,7 +20,9 @@ class EntityManager {
     EntityManager();
     virtual ~EntityManager();
 
+    // Registers an entity in the system and assigns it an unique id.
     const boost::uuids::uuid SpawnEntity(Entity *entity);
+    // Removes a registered entity from the system and deteles it.
     void DespawnEntity(const boost::uuids::uuid &id);
 
     Entity *entity(const boost::uuids::uuid &id);

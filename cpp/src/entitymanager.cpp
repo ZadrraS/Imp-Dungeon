@@ -22,6 +22,7 @@ const boost::uuids::uuid EntityManager::SpawnEntity(Entity *entity) {
 }
 
 void EntityManager::DespawnEntity(const boost::uuids::uuid &id) {
+  delete entities_[id];
   entities_.erase(id);
   // TODO(ZadrraS): Make this not explode in your face when handed a bad id.
 }

@@ -8,6 +8,7 @@
 
 #include "map.h"
 #include "entitymanager.h"
+#include "loader.h"
 
 namespace impdungeon {
 
@@ -26,8 +27,9 @@ class World {
 
   private:
     Map map_;
-    boost::unordered_map<Entity *, Position *> entities_;
+    boost::unordered_map<boost::uuids::uuid, Position *> entities_;
     EntityManager entity_manager_;
+    Loader loader_;
 
     std::queue <Event *> events_;
 };

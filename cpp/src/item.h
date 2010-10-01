@@ -16,8 +16,8 @@ class Item {
          bool equipable, bool usable);
     virtual ~Item();
 
-    virtual void equip(Entity &entity) = 0;
-    virtual void use(Entity &entity) = 0;
+    virtual void Equip(Entity &entity) = 0;
+    virtual void Use(Entity &entity) = 0;
 
     const boost::uuids::uuid &id() const;
     const std::string &name() const;

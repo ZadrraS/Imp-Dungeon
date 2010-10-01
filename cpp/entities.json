@@ -1,6 +1,11 @@
 {
   "ZadrraS": {
     "password": "slaptazodis",
+    "map": "box",
+    "position": {
+      "x": 2,
+      "y": 2
+    },
     "health": {
       "current": 10,
       "max": 10
@@ -21,6 +26,11 @@
   },
   "Blargson": {
     "password": "blarg",
+    "map": "box",
+    "position": {
+      "x": 5,
+      "y": 4
+    },
     "health": {
       "current": 20,
       "max": 20

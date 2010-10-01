@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-Wall -c
 LDFLAGS=
-SOURCES=main.cpp boundedattribute.cpp entity.cpp entitymanager.cpp map.cpp position.cpp world.cpp  item.cpp
+SOURCES=main.cpp boundedattribute.cpp entity.cpp entitymanager.cpp map.cpp position.cpp world.cpp  item.cpp loader.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=server
 

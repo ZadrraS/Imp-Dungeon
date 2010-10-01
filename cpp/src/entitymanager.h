@@ -16,21 +16,21 @@ class Entity;
 * and accessed. Entities are indexed and refered to by their unique id's.
 ---------------------*/
 class EntityManager {
-  public:
-    EntityManager();
-    virtual ~EntityManager();
+ public:
+  EntityManager();
+  virtual ~EntityManager();
 
-    // Registers an entity in the system and assigns it an unique id.
-    const boost::uuids::uuid SpawnEntity(Entity *entity);
-    // Removes a registered entity from the system and deteles it.
-    void DespawnEntity(const boost::uuids::uuid &id);
+  // Registers an entity in the system and assigns it an unique id.
+  const boost::uuids::uuid SpawnEntity(Entity *entity);
+  // Removes a registered entity from the system and deteles it.
+  void DespawnEntity(const boost::uuids::uuid &id);
 
-    Entity *entity(const boost::uuids::uuid &id);
+  Entity *entity(const boost::uuids::uuid &id);
 
-  private:
-    boost::unordered_map<boost::uuids::uuid, Entity *> entities_;
+ private:
+  boost::unordered_map<boost::uuids::uuid, Entity *> entities_;
 
-    boost::uuids::random_generator uuid_generator_;
+  boost::uuids::random_generator uuid_generator_;
 
 };
 

@@ -16,22 +16,22 @@ class Entity;
 class Event;
 
 class World {
-  public:
-    World();
-    virtual ~World();
+ public:
+  World();
+  virtual ~World();
 
-    void Init(const std::string &map_file_name, 
-              const std::string &entity_file_name);
-    void Run();
-    void Destroy();
+  void Init(const std::string &map_file_name, 
+            const std::string &entity_file_name);
+  void Run();
+  void Destroy();
 
-  private:
-    Map map_;
-    boost::unordered_map<boost::uuids::uuid, Position *> entities_;
-    EntityManager entity_manager_;
-    Loader loader_;
+ private:
+  Map map_;
+  boost::unordered_map<boost::uuids::uuid, Position *> entities_;
+  EntityManager entity_manager_;
+  Loader loader_;
 
-    std::queue <Event *> events_;
+  std::queue <Event *> events_;
 };
 
 }  // namespace impdungeon

@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
   impdungeon::World world;
 
-  world.Init("map.txt", "entities.json");
+  world.Init("box.txt", "entities.json");
   world.Run();
 
   world.Destroy();

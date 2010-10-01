@@ -14,26 +14,25 @@ namespace impdungeon {
 * This class is not supposed to be instantiated directly - see EntityManager.
 ---------------------*/
 class Entity {
-  public:
-    Entity(const std::string &name, const BoundedAttribute &health);
-    virtual ~Entity();
+ public:
+  Entity(const std::string &name, const BoundedAttribute &health);
+  virtual ~Entity();
 
-    void Damage(int amount);
+  void Damage(int amount);
 
-    // Assigns an id to an entity. This can be done only once.
-    // Returns false if the entity already has an id attached.
-    bool AssignId(const boost::uuids::uuid &id);
+  // Assigns an id to an entity. This can be done only once.
+  // Returns false if the entity already has an id attached.
+  bool AssignId(const boost::uuids::uuid &id);
 
-    boost::uuids::uuid id() const;
-    std::string name() const;
-    BoundedAttribute health() const;
+  boost::uuids::uuid id() const;
+  std::string name() const;
+  BoundedAttribute health() const;
 
-  private:
-    boost::uuids::uuid id_;
+ private:
+  boost::uuids::uuid id_;
 
-    std::string name_;
-    BoundedAttribute health_;
-
+  std::string name_;
+  BoundedAttribute health_;
 };
 
 }  // namespace impdungeon

@@ -1,6 +1,5 @@
 #include "world.h"
-#include "loader.h"
-#include "entity.h"
+
 
 int main(int argc, char *argv[]) {
   impdungeon::World world;
@@ -9,6 +8,6 @@ int main(int argc, char *argv[]) {
   world.Run();
 
   world.Destroy();
-  
+
   return 0;
 }

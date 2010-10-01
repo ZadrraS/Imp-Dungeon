@@ -12,8 +12,7 @@ namespace impdungeon {
 ---------------------*/
 class Item {
  public:
-  Item(const boost::uuids::uuid &id, const std::string &name, int value, 
-       bool equipable, bool usable);
+  Item(const std::string &name, int value, bool equipable, bool usable);
   virtual ~Item();
 
   virtual void Equip(Entity &entity) = 0;

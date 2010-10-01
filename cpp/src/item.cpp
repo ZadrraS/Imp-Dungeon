@@ -1,10 +1,11 @@
 #include "item.h"
 
+#include <boost/uuid/nil_generator.hpp>
+
 namespace impdungeon {
 
-Item::Item(const boost::uuids::uuid &id, const std::string &name, int value, 
-           bool equipable, bool usable)
-  : id_(id),
+Item::Item(const std::string &name, int value, bool equipable, bool usable)
+  : id_(boost::uuids::nil_generator()()),
     name_(name),
     value_(value),
     equipable_(equipable),

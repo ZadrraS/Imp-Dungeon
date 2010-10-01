@@ -1,5 +1,7 @@
 #include "itemmanager.h"
 
+#include "item.h"
+
 namespace impdungeon {
 
 ItemManager::ItemManager() {

@@ -5,9 +5,9 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include "item.h"
-
 namespace impdungeon {
+
+class Item;
 
 /*-------------------
 * An Item manager, enabling items to be registered in the game, destroyed 

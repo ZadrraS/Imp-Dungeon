@@ -1,7 +1,6 @@
 #include "world.h"
 
 #include <fstream>
-#include <iostream>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -9,6 +8,7 @@
 #include <boost/uuid/uuid.hpp>
 
 #include "entity.h"
+#include "item.h"
 #include "position.h"
 #include "boundedattribute.h"
 

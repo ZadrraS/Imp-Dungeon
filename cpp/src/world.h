@@ -28,6 +28,8 @@ class World {
  private:
   Map map_;
   boost::unordered_map<boost::uuids::uuid, Position *> entities_;
+  boost::unordered_map<boost::uuids::uuid, Position *> items_;
+
   EntityManager entity_manager_;
   Loader loader_;
 

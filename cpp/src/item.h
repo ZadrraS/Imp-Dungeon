@@ -19,6 +19,10 @@ class Item {
   virtual void Equip(Entity &entity) = 0;
   virtual void Use(Entity &entity) = 0;
 
+  // Assigns an id to an item. This can be done only once.
+  // Returns false if the item already has an id attached.
+  bool AssignId(const boost::uuids::uuid &id);
+
   const boost::uuids::uuid &id() const;
   const std::string &name() const;
   int value() const;

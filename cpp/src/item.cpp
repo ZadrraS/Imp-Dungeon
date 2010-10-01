@@ -16,6 +16,14 @@ Item::~Item() {
 
 }
 
+bool Item::AssignId(const boost::uuids::uuid &id) {
+  if (id_.is_nil()) {
+    id_ = id;
+    return true;
+  }
+  return false;
+}
+
 const boost::uuids::uuid &Item::id() const {
   return id_;
 }

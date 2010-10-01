@@ -56,10 +56,14 @@ void World::Run() {
 }
 
 void World::Destroy() {
-  typedef boost::unordered_map<boost::uuids::uuid, Position *> map;
-  BOOST_FOREACH(map::value_type entity, entities_) {
+  typedef boost::unordered_map<boost::uuids::uuid, Position *> position_map;
+  BOOST_FOREACH(position_map::value_type entity, entities_) {
     entity_manager_.DespawnEntity(entity.first);
     delete entity.second;
+  }
+  BOOST_FOREACH(position_map::value_type item, items_) {
+    item_manager_.DespawnItem(item.first);
+    delete item.second;
   }
 }
 

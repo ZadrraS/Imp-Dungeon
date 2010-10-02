@@ -6,6 +6,8 @@
 #include "map/attributes/boundedattribute.h"
 #include "map/entity.h"
 #include "map/items/item.h"
+#include "map/items/weapon.h"
+#include "map/items/potion.h"
 
 namespace impdungeon {
 
@@ -49,33 +51,24 @@ std::vector<Item *> Loader::GetEntityItems(const std::string &name) {
   std::vector<Item *> items;  
   BOOST_FOREACH(boost::property_tree::ptree::value_type &item_value, 
                 root_.get_child(name + ".inventory")) {
-    // TODO(ZadrraS): All the item loading.
+    Item *item;
     switch (item_value.second.get<char>("type")) {
       case 'w':
-
+        item = new Weapon(item_value.first, 
+                          item_value.second.get<int>("value"),
+                          item_value.second.get<int>("min_damage"),
+                          item_value.second.get<int>("max_damage"));
       break;
       case 'p':
-
+        item = new Potion(item_value.first,
+                          item_value.second.get<int>("value"),
+                          item_value.second.get<int>("strength"));
       break;
     }
+    items.push_back(item);
   }
 
   return items;
-  /*
-
-  BOOST_FOREACH(boost::property_tree::ptree::value_type &value, root.get_child("")) {
-    boost::property_tree::ptree health;
-    health = value.second.get_child("health");
-
-    std::cout << health.get<int>("current") << std::endl;
-    Entity *entity = new Entity(
-      value.first, 
-      BoundedAttribute(health.get<int>("current"), health.get<int>("max")));
-
-    Position *position = new Position(2, 2);
-    entities_[entity] = position;
-  
-  }*/
 }
 
 }  // namespace impdungeon

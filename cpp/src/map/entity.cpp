@@ -2,6 +2,8 @@
 
 #include <boost/uuid/nil_generator.hpp>
 
+#include "map/items/weapon.h"
+
 namespace impdungeon {
 
 Entity::Entity(const std::string &name, const BoundedAttribute &health)
@@ -16,6 +18,19 @@ Entity::~Entity() {
 
 void Entity::Damage(int amount) {
   health_ -= amount;
+}
+
+void Entity::Heal(int amount) {
+  health_ += amount;
+}
+
+void Entity::EquipWeapon(const Weapon *weapon) {
+  if (weapon != NULL)
+    weapon_ = weapon;
+}
+
+void Entity::TakeItem(Item *item) {
+  inventory_.AddItem(item);
 }
 
 bool Entity::AssignId(const boost::uuids::uuid &id) {

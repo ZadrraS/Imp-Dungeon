@@ -1,10 +1,14 @@
-#include "inventory.h"
+#include "map/inventory.h"
 
 #include <boost/foreach.hpp>
 
-#include "item.h"
+#include "map/items/item.h"
 
 namespace impdungeon {
+
+Inventory::Inventory(std::vector<Item *> &items) : items_(items) {
+
+}
 
 Inventory::Inventory() {
 

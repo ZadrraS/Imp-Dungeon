@@ -1,6 +1,6 @@
-#include "itemmanager.h"
+#include "map/itemmanager.h"
 
-#include "item.h"
+#include "map/items/item.h"
 
 namespace impdungeon {
 

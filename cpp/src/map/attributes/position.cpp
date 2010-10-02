@@ -1,4 +1,4 @@
-#include "position.h"
+#include "map/attributes/position.h"
 
 namespace impdungeon {
 

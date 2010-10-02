@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_INVENTORY_H_
-#define IMPDUNGEON_INVENTORY_H_
+#ifndef IMPDUNGEON_MAP_INVENTORY_H_
+#define IMPDUNGEON_MAP_INVENTORY_H_
 
 #include <vector>
 
@@ -15,6 +15,7 @@ class Item;
 ---------------------*/
 class Inventory {
  public:
+  explicit Inventory(std::vector<Item *> &items);
   Inventory();
   virtual ~Inventory();
 
@@ -25,7 +26,7 @@ class Inventory {
   bool RemoveItem(boost::uuids::uuid &id);
 
   // Returns an item by its id.
-  // If an item specified is not in the inventory false is returned.
+  // If an item specified is not in the inventory NULL is returned.
   Item *item(boost::uuids::uuid &id);
 
   std::vector<Item *>::iterator begin();
@@ -39,4 +40,4 @@ class Inventory {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_INVENTORY_H_
+#endif  // IMPDUNGEON_MAP_INVENTORY_H_

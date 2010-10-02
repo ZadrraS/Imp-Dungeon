@@ -1,4 +1,4 @@
-#include "item.h"
+#include "map/items/item.h"
 
 #include <boost/uuid/nil_generator.hpp>
 

@@ -1,11 +1,11 @@
-#ifndef IMPDUNGEON_ENTITYMANAGER_H_
-#define IMPDUNGEON_ENTITYMANAGER_H_
+#ifndef IMPDUNGEON_MAP_ENTITYMANAGER_H_
+#define IMPDUNGEON_MAP_ENTITYMANAGER_H_
 
 #include <boost/unordered_map.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include "boundedattribute.h"
+#include "map/attributes/boundedattribute.h"
 
 namespace impdungeon {
 
@@ -36,5 +36,5 @@ class EntityManager {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_ENTITYMANAGER_H_
+#endif  // IMPDUNGEON_MAP_ENTITYMANAGER_H_
 

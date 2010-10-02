@@ -11,18 +11,21 @@
       "max": 10
     },
     "inventory": {
-      "weapon": {
-        "Long sword": {   
-          "min_damage": 6,
-          "max_damage": 10
-        }
+      "Long sword": { 
+        "type": "w",  
+        "min_damage": 6,
+        "max_damage": 10
       },
-      "potion": {
-        "Health potion": {
-          "strength": 8
-        }
+      "Dagger": {
+        "type": "w",
+        "min_damage": 1,
+        "max_damage": 4
+      },
+      "Health potion": {
+        "type": "p",
+        "strength": 8
       }
-    }
+     }
   },
   "Blargson": {
     "password": "blarg",

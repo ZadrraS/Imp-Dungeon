@@ -1,4 +1,4 @@
-#include "entity.h"
+#include "map/entity.h"
 
 #include <boost/uuid/nil_generator.hpp>
 

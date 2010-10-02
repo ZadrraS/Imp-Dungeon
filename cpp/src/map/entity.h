@@ -1,11 +1,11 @@
-#ifndef IMPDUNGEON_ENTITY_H_
-#define IMPDUNGEON_ENTITY_H_
+#ifndef IMPDUNGEON_MAP_ENTITY_H_
+#define IMPDUNGEON_MAP_ENTITY_H_
 
 #include <string>
 
 #include <boost/uuid/uuid.hpp>
 
-#include "boundedattribute.h"
+#include "map/attributes/boundedattribute.h"
 
 namespace impdungeon {
 
@@ -37,5 +37,5 @@ class Entity {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_ENTITY_H_
+#endif  // IMPDUNGEON_MAP_ENTITY_H_
 

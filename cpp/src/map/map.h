@@ -1,9 +1,9 @@
-#ifndef IMPDUNGEON_MAP_H_
-#define IMPDUNGEON_MAP_H_
+#ifndef IMPDUNGEON_MAP_MAP_H_
+#define IMPDUNGEON_MAP_MAP_H_
 
 #include <string>
 
-#include "position.h"
+#include "map/attributes/position.h"
 
 namespace impdungeon {
 
@@ -35,7 +35,7 @@ class Map {
   Tile *tiles_;
 };
 
-}  // namespace imp_dungeon
+}  // namespace impdungeon
 
-#endif  // IMPDUNGEON_MAP_H_
+#endif  // IMPDUNGEON_MAP_MAP_H_
 

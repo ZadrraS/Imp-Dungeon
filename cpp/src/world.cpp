@@ -7,10 +7,10 @@
 #include <boost/foreach.hpp>
 #include <boost/uuid/uuid.hpp>
 
-#include "entity.h"
-#include "item.h"
-#include "position.h"
-#include "boundedattribute.h"
+#include "map/entity.h"
+#include "map/items/item.h"
+#include "map/attributes/position.h"
+#include "map/attributes/boundedattribute.h"
 
 namespace impdungeon {
 
@@ -33,6 +33,9 @@ void World::Init(const std::string &map_file_name,
   boost::uuids::uuid id = entity_manager_.SpawnEntity(entity);
   entities_[id] = position;
   
+  std::vector<Item *> items = loader_.GetEntityItems("ZadrraS");
+  
+
   /*boost::property_tree::ptree root;
   boost::property_tree::json_parser::read_json("../" + entity_file_name, root);
 

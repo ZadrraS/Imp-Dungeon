@@ -1,4 +1,4 @@
- #include "boundedattribute.h"
+ #include "map/attributes/boundedattribute.h"
 
 namespace impdungeon {
 

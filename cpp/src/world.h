@@ -6,10 +6,10 @@
 
 #include <boost/unordered_map.hpp>
 
-#include "map.h"
-#include "entitymanager.h"
-#include "itemmanager.h"
-#include "loader.h"
+#include "map/map.h"
+#include "map/entitymanager.h"
+#include "map/itemmanager.h"
+#include "loaders/loader.h"
 
 namespace impdungeon {
 

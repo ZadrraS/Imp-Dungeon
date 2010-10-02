@@ -1,6 +1,6 @@
-#include "entitymanager.h"
+#include "map/entitymanager.h"
 
-#include "entity.h"
+#include "map/entity.h"
 
 namespace impdungeon {
 

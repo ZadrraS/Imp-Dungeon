@@ -1,9 +1,9 @@
-#ifndef IMPDUNGEON_ITEM_H_
-#define IMPDUNGEON_ITEM_H_
+#ifndef IMPDUNGEON_MAP_ITEMS_ITEM_H_
+#define IMPDUNGEON_MAP_ITEMS_ITEM_H_
 
 #include <boost/uuid/uuid.hpp>
 
-#include "entity.h"
+#include "map/entity.h"
 
 namespace impdungeon {
 
@@ -39,4 +39,4 @@ class Item {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_ITEM_H_
+#endif  // IMPDUNGEON_MAP_ITEMS_ITEM_H_

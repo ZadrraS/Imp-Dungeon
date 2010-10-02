@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_POSITION_H
-#define IMPDUNGEON_POSITION_H
+#ifndef IMPDUNGEON_MAP_ATTRIBUTES_POSITION_H
+#define IMPDUNGEON_MAP_ATTRIBUTES_POSITION_H
 
 namespace impdungeon {
 
@@ -31,5 +31,5 @@ class Position {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_POSITION_H
+#endif  // IMPDUNGEON_MAP_ATTRIBUTES_POSITION_H
 

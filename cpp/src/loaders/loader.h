@@ -1,13 +1,7 @@
-#ifndef IMPDUNGEON_LOADER_H_
-#define IMPDUNGEON_LOADER_H_
-
-#include <string>
-#include <vector>
+#ifndef IMPDUNGEON_MAP_LOADERS_LOADER_H_
+#define IMPDUNGEON_MAP_LOADERS_LOADER_H_
 
 #include <boost/property_tree/ptree.hpp>
-
-#include "map/attributes/boundedattribute.h"
-#include "map/attributes/position.h"
 
 namespace impdungeon {
 
@@ -20,12 +14,7 @@ class Loader {
 
   void Init(const std::string &file_name);
 
-  std::string GetEntityPassword(const std::string &name);
-  std::string GetEntityMap(const std::string &name);
-  Position GetEntityPosition(const std::string &name);    
-  BoundedAttribute GetEntityHealth(const std::string &name);
-
-  std::vector<Item *> GetEntityItems(const std::string &name);
+  const boost::property_tree::ptree &root() const;
 
  private:
   boost::property_tree::ptree root_;
@@ -33,4 +22,4 @@ class Loader {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_LOADER_H_
+#endif  // IMPDUNGEON_MAP_LOADERS_LOADER_H_

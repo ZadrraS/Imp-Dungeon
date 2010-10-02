@@ -9,7 +9,7 @@
 #include "map/map.h"
 #include "map/entitymanager.h"
 #include "map/itemmanager.h"
-#include "loaders/loader.h"
+#include "loaders/entityloader.h"
 
 namespace impdungeon {
 
@@ -37,7 +37,7 @@ class World {
 
   EntityManager entity_manager_;
   ItemManager item_manager_;
-  Loader loader_;
+  EntityLoader entity_loader_;
 
   std::queue <Event *> events_;
 };

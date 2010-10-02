@@ -24,13 +24,14 @@ World::~World() {
 
 void World::Init(const std::string &map_file_name, 
                  const std::string &entity_file_name) {
-  map_.Init("../" + map_file_name);
-  loader_.Init("../" + entity_file_name);
+  map_.Init("../" + map_file_name + ".txt");
+  entity_loader_.Init("../" + entity_file_name);
   
-  Position *position = new Position(loader_.GetEntityPosition("ZadrraS"));
-  Entity *entity = new Entity("ZadrraS", loader_.GetEntityHealth("ZadrraS"));
+  // TODO(ZadrraS): Move all entity loading logic somewhere else.
+  Position *position = new Position(entity_loader_.GetPosition("ZadrraS"));
+  Entity *entity = new Entity("ZadrraS", entity_loader_.GetHealth("ZadrraS"));
 
-  std::vector<Item *> items = loader_.GetEntityItems("ZadrraS");
+  std::vector<Item *> items = entity_loader_.GetItems("ZadrraS");
   BOOST_FOREACH(Item *item, items) {
     item_manager_.SpawnItem(item);
     entity->TakeItem(item);  
@@ -38,6 +39,8 @@ void World::Init(const std::string &map_file_name,
 
   boost::uuids::uuid id = entity_manager_.SpawnEntity(entity);
   entities_[id] = position;
+
+
 }
 
 void World::Run() {

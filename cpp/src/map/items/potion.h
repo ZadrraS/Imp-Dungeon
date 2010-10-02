@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_POTION_H_
-#define IMPDUNGEON_POTION_H_
+#ifndef IMPDUNGEON_MAP_ITEMS_POTION_H_
+#define IMPDUNGEON_MAP_ITEMS_POTION_H_
 
 #include "map/items/item.h"
 
@@ -22,4 +22,4 @@ class Potion : public Item {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_POTION_H_
+#endif  // IMPDUNGEON_MAP_ITEMS_POTION_H_

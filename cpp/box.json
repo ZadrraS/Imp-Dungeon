@@ -1,0 +1,20 @@
+{
+  "Long sword": {
+    "type": "w",
+    "position": {
+      "x": 10,
+      "y": 5
+    },
+    "min_damage": 6,
+    "max_damage": 10
+  },
+  "Health potion": {
+    "type": "p",
+    "position": {
+      "x": 10,
+      "y": 6
+    },
+    "strength": 8
+  }
+}
+

@@ -3,8 +3,9 @@ CFLAGS=-Wall -c
 LDFLAGS=
 INCLDS=-I.
 SOURCES=main.cpp map/attributes/boundedattribute.cpp map/entity.cpp \
+        loaders/loader.cpp loaders/entityloader.cpp loaders/maploader.cpp \
         map/entitymanager.cpp map/map.cpp map/attributes/position.cpp \
-        world.cpp  map/items/item.cpp loaders/loader.cpp map/itemmanager.cpp \
+        world.cpp  map/items/item.cpp map/itemmanager.cpp \
         map/inventory.cpp map/items/weapon.cpp map/items/potion.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=server

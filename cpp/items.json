@@ -1,0 +1,19 @@
+{
+  "Long sword": { 
+    "value": 20,
+    "type": "w",  
+    "min_damage": 6,
+    "max_damage": 10
+  },
+  "Dagger": { 
+    "value": 5,
+    "type": "w",
+    "min_damage": 1,
+    "max_damage": 4
+  },
+  "Health potion": {
+    "value": 10,
+    "type": "p",
+    "strength": 4
+  }
+}

@@ -16,7 +16,6 @@ namespace impdungeon {
 class Entity;
 class Event;
 
-
 /*-------------------
 * World manages received events and ties together most of the games subsystems.
 ---------------------*/
@@ -31,7 +30,7 @@ class World {
   void Destroy();
 
  private:
-  Map map_;
+  Map *map_;
   boost::unordered_map<boost::uuids::uuid, Position *> entities_;
   boost::unordered_map<boost::uuids::uuid, Position *> items_;
 

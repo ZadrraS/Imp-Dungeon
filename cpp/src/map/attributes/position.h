@@ -8,6 +8,7 @@ namespace impdungeon {
 ---------------------*/
 class Position {
  public:
+  Position();
   Position(int x, int y);
   Position(const Position &position);
   virtual ~Position();

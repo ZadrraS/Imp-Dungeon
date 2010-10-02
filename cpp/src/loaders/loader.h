@@ -12,7 +12,7 @@ class Loader {
   Loader();
   virtual ~Loader();
 
-  void Init(const std::string &file_name);
+  virtual void Init(const std::string &file_name);
 
   const boost::property_tree::ptree &root() const;
 

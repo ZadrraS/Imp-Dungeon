@@ -1,38 +1,15 @@
 #include "map/map.h"
 
-#include <fstream>
-#include <iostream>
-
 namespace impdungeon {
 
-Map::Map() {
-  tiles_ = NULL;
+Map::Map(int width, int height, Tile *tiles) 
+  : width_(width), height_(height), tiles_(tiles) {
+
 }
 
 Map::~Map() {
   if (tiles_ != NULL)
     delete [] tiles_;
-}
-
-void Map::Init(const std::string &file_name) {
-  std::ifstream map_file(file_name.c_str());
-
-  map_file >> width_ >> height_;
-  tiles_ = new Tile [width_ * height_];
-  for (int y = 0; y < height_; y++) {
-    for (int x = 0; x < width_; x++) {
-      char tile_rep;
-      map_file >> tile_rep;
-      if (tile_rep == '#')
-         tiles_[y * width_ + x] = WALL;
-      else if (tile_rep == '~')
-        tiles_[y * width_ + x] = WATER;
-      else
-        tiles_[y * width_ + x] = GROUND;
-
-      //  TODO(ZadrraS): Error checking
-    }
-  }
 }
 
 bool Map::IsPassable(const Position &position) const {

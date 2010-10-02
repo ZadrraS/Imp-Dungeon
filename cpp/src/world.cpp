@@ -14,7 +14,7 @@
 
 namespace impdungeon {
 
-World::World() {
+World::World() : map_(NULL) {
 
 }
 
@@ -24,14 +24,14 @@ World::~World() {
 
 void World::Init(const std::string &map_file_name, 
                  const std::string &entity_file_name) {
-  map_.Init("../" + map_file_name + ".txt");
-  entity_loader_.Init("../" + entity_file_name);
-  
-  // TODO(ZadrraS): Move all entity loading logic somewhere else.
-  Position *position = new Position(entity_loader_.GetPosition("ZadrraS"));
-  Entity *entity = new Entity("ZadrraS", entity_loader_.GetHealth("ZadrraS"));
+  entity_loader_.Init(entity_file_name, "items.json", map_file_name);
 
-  std::vector<Item *> items = entity_loader_.GetItems("ZadrraS");
+  map_ = entity_loader_.GetMap();
+  // TODO(ZadrraS): Move all entity loading logic somewhere else.
+  Position *position = new Position(entity_loader_.GetEntityPosition("ZadrraS"));
+  Entity *entity = new Entity("ZadrraS", entity_loader_.GetEntityHealth("ZadrraS"));
+
+  std::vector<Item *> items = entity_loader_.GetEntityItems("ZadrraS");
   BOOST_FOREACH(Item *item, items) {
     item_manager_.SpawnItem(item);
     entity->TakeItem(item);  

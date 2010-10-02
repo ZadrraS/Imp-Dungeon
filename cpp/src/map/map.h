@@ -19,10 +19,8 @@ enum Tile {
 ---------------------*/
 class Map {
  public:
-  Map();
+  Map(int width, int height, Tile *tiles);
   virtual ~Map();
-
-  void Init(const std::string &file_name);
 
   bool IsPassable(const Position &position) const;
   Tile tile(const Position &position) const;

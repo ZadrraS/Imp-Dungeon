@@ -1,7 +1,11 @@
 CC=g++
 CFLAGS=-Wall -c
 LDFLAGS=
-SOURCES=main.cpp boundedattribute.cpp entity.cpp entitymanager.cpp map.cpp position.cpp world.cpp  item.cpp loader.cpp itemmanager.cpp inventory.cpp
+INCLDS=-I.
+SOURCES=main.cpp map/attributes/boundedattribute.cpp map/entity.cpp \
+        map/entitymanager.cpp map/map.cpp map/attributes/position.cpp \
+        world.cpp  map/items/item.cpp loaders/loader.cpp map/itemmanager.cpp \
+        map/inventory.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=server
 
@@ -11,7 +15,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(INCLDS) $< -o $@
 
 clean:
-	rm -rf *.o
+	find . -name \*.o -delete 

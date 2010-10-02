@@ -2,13 +2,16 @@
 #define IMPDUNGEON_LOADER_H_
 
 #include <string>
+#include <vector>
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "boundedattribute.h"
-#include "position.h"
+#include "map/attributes/boundedattribute.h"
+#include "map/attributes/position.h"
 
 namespace impdungeon {
+
+class Item;
 
 class Loader {
  public:
@@ -21,6 +24,8 @@ class Loader {
   std::string GetEntityMap(const std::string &name);
   Position GetEntityPosition(const std::string &name);    
   BoundedAttribute GetEntityHealth(const std::string &name);
+
+  std::vector<Item *> GetEntityItems(const std::string &name);
 
  private:
   boost::property_tree::ptree root_;

@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_ITEMMANAGER_H_
-#define IMPDUNGEON_ITEMMANAGER_H_
+#ifndef IMPDUNGEON_MAP_ITEMMANAGER_H_
+#define IMPDUNGEON_MAP_ITEMMANAGER_H_
 
 #include <boost/unordered_map.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -33,4 +33,4 @@ class ItemManager {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_ITEMMANAGER_H_
+#endif  // IMPDUNGEON_MAP_ITEMMANAGER_H_

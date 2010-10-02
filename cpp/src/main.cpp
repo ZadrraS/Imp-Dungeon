@@ -1,6 +1,5 @@
 #include "world.h"
 
-
 int main(int argc, char *argv[]) {
   impdungeon::World world;
 

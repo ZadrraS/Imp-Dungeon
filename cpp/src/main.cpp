@@ -1,9 +1,8 @@
 #include "world.h"
 
 int main(int argc, char *argv[]) {
-  impdungeon::World world;
+  impdungeon::World world("box", "items.json", "entities.json");
   
-  world.Init("box", "entities.json");
   world.Run();
 
   world.Destroy();

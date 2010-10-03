@@ -3,13 +3,16 @@
 
 #include <vector>
 
+#include <boost/property_tree/ptree.hpp>
+
 #include "loaders/loader.h"
+#include "loaders/itemloader.h"
 #include "map/attributes/position.h"
 
 namespace impdungeon {
 
-struct PositionedItem {
-  Item *item;
+struct ObjectData {
+  std::string name;
   Position position;
 };
 
@@ -18,19 +21,24 @@ class Map;
 /*-------------------
 * MapLoader loads maps and the content currently on the map from data files.
 ---------------------*/
-class MapLoader : public Loader {
+class MapLoader {
  public:
-  MapLoader();
+  MapLoader(const std::string &map_file_name, 
+            const std::string &item_file_name, 
+            const ItemLoader &item_loader);
   virtual ~MapLoader();
 
-  void Init(const std::string &map_name);
+  void Init();
 
-  Map *GetMap();
-  std::vector<PositionedItem> GetItems();
+  Map *GetMap() const;
+  std::vector<ObjectData> GetItems() const;
 
  private:
-  std::string map_name_;
+  const std::string map_file_name_;
+  const std::string item_file_name_;
+  boost::property_tree::ptree root_;
   
+  const ItemLoader &item_loader_;
 };
 
 }  // namespace impdungeon

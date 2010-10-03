@@ -9,23 +9,26 @@
 #include "map/map.h"
 #include "map/entitymanager.h"
 #include "map/itemmanager.h"
-#include "loaders/entityloader.h"
 
 namespace impdungeon {
 
 class Entity;
 class Event;
+class EntityLoader;
+class MapLoader;
+class ItemLoader;
 
 /*-------------------
 * World manages received events and ties together most of the games subsystems.
 ---------------------*/
 class World {
  public:
-  World();
+  World(const std::string &map_file_name, 
+        const std::string &entity_file_name,
+        const std::string &item_file_name);
   virtual ~World();
 
-  void Init(const std::string &map_file_name, 
-            const std::string &entity_file_name);
+  void Init();
   void Run();
   void Destroy();
 
@@ -36,7 +39,10 @@ class World {
 
   EntityManager entity_manager_;
   ItemManager item_manager_;
-  EntityLoader entity_loader_;
+
+  EntityLoader *entity_loader_;
+  MapLoader *map_loader_;
+  ItemLoader *item_loader_;
 
   std::queue <Event *> events_;
 };

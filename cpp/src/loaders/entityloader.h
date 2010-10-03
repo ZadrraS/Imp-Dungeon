@@ -4,45 +4,36 @@
 #include <string>
 #include <vector>
 
+#include <boost/property_tree/ptree.hpp>
+
 #include "map/attributes/boundedattribute.h"
 #include "map/attributes/position.h"
-#include "loaders/loader.h"
 
 namespace impdungeon {
 
 class Item;
-class Map;
+class ItemLoader;
 
-struct PositionedItem {
-  Item *item;
-  Position position;
-};
-
-class EntityLoader : public Loader {
+class EntityLoader {
  public:
-  EntityLoader();
+  EntityLoader(const std::string &file_name, 
+               const ItemLoader &item_loader);
   virtual ~EntityLoader();
 
-  void Init(const std::string &file_name, 
-            const std::string &item_file_name,
-            const std::string &map_name);
+  void Init();
 
-  std::string GetEntityPassword(const std::string &name);
-  std::string GetEntityMap(const std::string &name);
-  Position GetEntityPosition(const std::string &name);    
-  BoundedAttribute GetEntityHealth(const std::string &name);
+  std::string GetPassword(const std::string &entity_name) const;
+  std::string GetMap(const std::string &entity_name) const;
+  Position GetPosition(const std::string &entity_name) const;    
+  BoundedAttribute GetHealth(const std::string &entity_name) const;
 
-  std::vector<Item *> GetEntityItems(const std::string &name);
-
-  Map *GetMap();
-  std::vector<PositionedItem> GetItems();
+  std::vector<Item *> GetItems(const std::string &entity_name) const;
 
  private:
-  Item *ConstructItem(const std::string &name);
+  const std::string file_name_;
+  boost::property_tree::ptree root_;
 
-  boost::property_tree::ptree item_database_;
-  boost::property_tree::ptree map_root_;
-  std::string map_name_;
+  const ItemLoader &item_loader_;
 };
 
 }  // namespace impdungeon

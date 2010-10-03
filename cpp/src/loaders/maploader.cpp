@@ -2,11 +2,20 @@
 
 #include <fstream>
 
+#include <boost/foreach.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 #include "map/map.h"
+#include "loaders/malformeddata.h"
 
 namespace impdungeon {
 
-MapLoader::MapLoader() {
+MapLoader::MapLoader(const std::string &map_file_name, 
+                     const std::string &item_file_name, 
+                     const ItemLoader &item_loader) 
+  : map_file_name_(map_file_name),
+    item_file_name_(item_file_name), 
+    item_loader_(item_loader) {
 
 }
 
@@ -14,19 +23,23 @@ MapLoader::~MapLoader() {
 
 }
 
-void MapLoader::Init(const std::string &map_name) {
-  Loader::Init(map_name + ".json");
-  map_name_ = map_name;
+void MapLoader::Init() {
+  try {
+    boost::property_tree::json_parser::read_json(item_file_name_, root_);
+  }  
+  catch(boost::property_tree::ptree_error &exception) {
+    throw MalformedData("Item file \"" + item_file_name_ + "\" not found.");
+  }
 }
 
-Map *MapLoader::GetMap() {
-  std::ifstream map_file((map_name_ + ".txt").c_str());
+Map *MapLoader::GetMap() const {
+  std::ifstream map_file(map_file_name_.c_str());
   int width, height;
   map_file >> width >> height;
   
   Tile *tiles = new Tile[width * height];
-  for (int y = 0; y < height_; y++) {
-    for (int x = 0; x < width_; x++) {
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
       char tile_rep;
       map_file >> tile_rep;
       if (tile_rep == '#')
@@ -40,41 +53,28 @@ Map *MapLoader::GetMap() {
     }
   }
   map_file.close();
-  return Map(width, height, tiles);
+
+  Map *map = new Map(width, height, tiles);
+  return map;
 }
 
-std::vector<PositionedItem> MapLoader::GetItems() {
-  std::vector<Item *> items;  
+std::vector<ObjectData> MapLoader::GetItems() const {
+  std::vector<ObjectData> items;  
   try {
     BOOST_FOREACH(const boost::property_tree::ptree::value_type &item_value,
-                  root().get_child(name + ".inventory")) {
+                  root_.get_child("")) {
+      ObjectData item_info;
+      item_info.name = item_value.first;
+      int x = root_.get<int>(item_value.first + ".position.x");
+      int y = root_.get<int>(item_value.first + ".position.y");
+      item_info.position = Position(x, y);
 
-      const boost::property_tree::ptree &database_item = 
-        item_database_.get_child(item_value.second.get<std::string>(""));
-
-      Item *item;
-      switch (database_item.get<char>("type")) {
-        case 'w': {
-          item = new Weapon(item_value.second.get<std::string>(""), 
-                            database_item.get<int>("value"),
-                            database_item.get<int>("min_damage"),
-                            database_item.get<int>("max_damage"));
-          break;
-        }
-        case 'p': {
-          item = new Potion(item_value.second.get<std::string>(""),
-                            database_item.get<int>("value"),
-                            database_item.get<int>("strength"));
-          break;
-        } 
-      }
-      items.push_back(item);
+      items.push_back(item_info);
     }
   }
   catch(boost::property_tree::ptree_error &exception) {
-    throw MalformedData("Entity inventory does not match database.");
+    throw MalformedData("Map item does not match database.");
   }
-
   return items;
 }
 

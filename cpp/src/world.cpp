@@ -35,9 +35,17 @@ void World::Init() {
   entity_loader_->Init();
   map_loader_->Init();
 
+  // TODO(ZadrraS): Possibly move all item loading logic somewhere else.
   map_ = map_loader_->GetMap();
+  std::vector<ObjectData> object_data = map_loader_->GetItems();
+  BOOST_FOREACH(ObjectData &object, object_data) {
+    Item *item = item_loader_->GetItem(object.name);
+    boost::uuids::uuid item_id = item_manager_.SpawnItem(item);
+    items_[item_id] = object.position;    
+  } 
+
   // TODO(ZadrraS): Move all entity loading logic somewhere else.
-  Position *position = new Position(entity_loader_->GetPosition("ZadrraS"));
+  Position position(entity_loader_->GetPosition("ZadrraS"));
   Entity *entity = new Entity("ZadrraS", entity_loader_->GetHealth("ZadrraS"));
 
   std::vector<Item *> items = entity_loader_->GetItems("ZadrraS");
@@ -46,8 +54,8 @@ void World::Init() {
     entity->TakeItem(item);  
   }
 
-  boost::uuids::uuid id = entity_manager_.SpawnEntity(entity);
-  entities_[id] = position;
+  boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
+  entities_[entity_id] = position;
 
 
 }
@@ -57,18 +65,16 @@ void World::Run() {
 }
 
 void World::Destroy() {
-  typedef boost::unordered_map<boost::uuids::uuid, Position *> position_map;
-  BOOST_FOREACH(position_map::value_type entity, entities_) {
+  typedef boost::unordered_map<boost::uuids::uuid, Position> position_map;
+  BOOST_FOREACH(position_map::value_type &entity, entities_) {
     entity_manager_.DespawnEntity(entity.first);
-    delete entity.second;
   }
-  BOOST_FOREACH(position_map::value_type item, items_) {
+  BOOST_FOREACH(position_map::value_type &item, items_) {
     item_manager_.DespawnItem(item.first);
-    delete item.second;
   }
-  delete item_loader_;
   delete entity_loader_;
   delete map_loader_;
+  delete item_loader_;
 }
 
 }  // namespace impdungeon

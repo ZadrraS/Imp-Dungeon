@@ -34,8 +34,8 @@ class World {
 
  private:
   Map *map_;
-  boost::unordered_map<boost::uuids::uuid, Position *> entities_;
-  boost::unordered_map<boost::uuids::uuid, Position *> items_;
+  boost::unordered_map<boost::uuids::uuid, Position> entities_;
+  boost::unordered_map<boost::uuids::uuid, Position> items_;
 
   EntityManager entity_manager_;
   ItemManager item_manager_;

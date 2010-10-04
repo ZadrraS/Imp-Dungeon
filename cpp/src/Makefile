@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall -c
+CFLAGS=-Wall -c -g
 LDFLAGS=
 INCLDS=-I.
 SOURCES=main.cpp map/attributes/boundedattribute.cpp map/entity.cpp \

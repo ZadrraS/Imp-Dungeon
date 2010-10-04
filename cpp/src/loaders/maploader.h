@@ -5,7 +5,6 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "loaders/loader.h"
 #include "loaders/itemloader.h"
 #include "map/attributes/position.h"
 

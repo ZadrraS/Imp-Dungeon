@@ -7,7 +7,8 @@ SOURCES=main.cpp map/attributes/boundedattribute.cpp map/entity.cpp \
         world.cpp  map/items/item.cpp map/itemmanager.cpp \
         map/inventory.cpp map/items/weapon.cpp map/items/potion.cpp \
         loaders/maploader.cpp loaders/entityloader.cpp loaders/itemloader.cpp \
-        loaders/malformeddata.cpp
+        loaders/malformeddata.cpp \
+        network/events/event.cpp network/events/moveevent.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=server
 

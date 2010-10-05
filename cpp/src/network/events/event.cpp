@@ -2,12 +2,16 @@
 
 namespace impdungeon {
 
-Event::Event() {
+Event::Event(boost::uuids::uuid &source) : source_(source) {
 
 }
 
 Event::~Event() {
 
+}
+
+boost::uuids::uuid Event::source() const {
+  return source_;
 }
 
 }  // namespace events

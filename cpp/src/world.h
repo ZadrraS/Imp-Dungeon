@@ -9,6 +9,7 @@
 #include "map/map.h"
 #include "map/entitymanager.h"
 #include "map/itemmanager.h"
+#include "network/events/eventvisitorinterface.h"
 
 namespace impdungeon {
 
@@ -21,7 +22,7 @@ class ItemLoader;
 /*-------------------
 * World manages received events and ties together most of the games subsystems.
 ---------------------*/
-class World {
+class World : public EventVisitorInterface {
  public:
   World(const std::string &map_file_name, 
         const std::string &entity_file_name,
@@ -30,7 +31,11 @@ class World {
 
   void Init();
   void Run();
-  void Destroy();
+
+  void PushEvent(Event *event);
+
+  // Inherited from the EventVisitorInterface
+  void Visit(MoveEvent &move_event);
 
  private:
   Map *map_;

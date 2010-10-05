@@ -18,6 +18,13 @@ Position::~Position() {
 
 }
 
+bool Position::IsNextTo(const Position &position) const {
+  Position position_diff = *this - position;
+  return (position_diff.x() <= 1 && position_diff.x() >= -1 &&
+          position_diff.y() <= 1 && position_diff.y() >= -1 &&
+          position_diff.x() != 0 && position_diff.y() != 0);
+}
+
 void Position::set_x(int x) {
   this->x_ = x;
 }
@@ -34,12 +41,12 @@ int Position::y() const {
   return y_;
 }
 
-Position Position::operator+(const Position &arg) {
+Position Position::operator+(const Position &arg) const {
   Position new_position(this->x_ + arg.x_, this->y_ + arg.y_);
   return new_position;
 }
 
-Position Position::operator-(const Position &arg) {
+Position Position::operator-(const Position &arg) const {
   Position new_position(this->x_ - arg.x_, this->y_ - arg.y_);
   return new_position;
 }

@@ -13,14 +13,16 @@ class Position {
   Position(const Position &position);
   virtual ~Position();
 
+  bool IsNextTo(const Position &position) const;
+
   void set_x(int x);
   void set_y(int y);
 
   int x() const;
   int y() const;
 
-  Position operator+(const Position &arg);
-  Position operator-(const Position &arg);
+  Position operator+(const Position &arg) const;
+  Position operator-(const Position &arg) const;
   Position &operator=(const Position &arg);
   Position &operator+=(const Position &arg);
   Position &operator-=(const Position &arg);

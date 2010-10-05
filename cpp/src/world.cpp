@@ -14,6 +14,8 @@
 #include "loaders/entityloader.h"
 #include "loaders/maploader.h"
 #include "loaders/itemloader.h"
+#include "network/events/event.h"
+#include "network/events/moveevent.h"
 
 namespace impdungeon {
 
@@ -27,7 +29,19 @@ World::World(const std::string &map_file_name,
 }
 
 World::~World() {
-
+  typedef boost::unordered_map<boost::uuids::uuid, Position> position_map;
+  BOOST_FOREACH(position_map::value_type &entity, entities_) {
+    entity_manager_.DespawnEntity(entity.first);
+  }
+  BOOST_FOREACH(position_map::value_type &item, items_) {
+    item_manager_.DespawnItem(item.first);
+  }
+  if (entity_loader_ != NULL)
+    delete entity_loader_;
+  if (map_loader_ != NULL)
+   delete map_loader_;
+  if (item_loader_ != NULL)
+   delete item_loader_;
 }
 
 void World::Init() {
@@ -61,20 +75,25 @@ void World::Init() {
 }
 
 void World::Run() {
-
+  while (!events_.empty()) {
+    Event *event = events_.front();
+    event->Accept(*this);
+    events_.pop();
+  }
 }
 
-void World::Destroy() {
-  typedef boost::unordered_map<boost::uuids::uuid, Position> position_map;
-  BOOST_FOREACH(position_map::value_type &entity, entities_) {
-    entity_manager_.DespawnEntity(entity.first);
+void World::PushEvent(Event *event) {
+  events_.push(event);
+}
+
+void World::Visit(MoveEvent &move_event) {
+  if (entity_manager_.entity(move_event.source()) != NULL) {
+    const Position &entity_position = entities_[move_event.source()];
+    if (map_->IsPassable(move_event.move()) && 
+        entity_position.IsNextTo(move_event.move())) {
+      entities_[move_event.source()] = move_event.move();
+    }
   }
-  BOOST_FOREACH(position_map::value_type &item, items_) {
-    item_manager_.DespawnItem(item.first);
-  }
-  delete entity_loader_;
-  delete map_loader_;
-  delete item_loader_;
 }
 
 }  // namespace impdungeon

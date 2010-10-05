@@ -7,7 +7,7 @@ class MoveEvent;
 
 class EventVisitorInterface {
  public:
-  virtual void Visit(MoveEvent *move_event) = 0;
+  virtual void Visit(MoveEvent &move_event) = 0;
 };
 
 }  // namespace events

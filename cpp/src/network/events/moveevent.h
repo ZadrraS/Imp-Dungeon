@@ -6,12 +6,12 @@
 
 namespace impdungeon {
 
-class MoveEvent {
+class MoveEvent : public Event {
  public:
-  MoveEvent(Position &move);
+  MoveEvent(boost::uuids::uuid &source, Position &move);
   virtual ~MoveEvent(); 
 
-  void Accept(EventVisitorInterface *event_visitor);
+  void Accept(EventVisitorInterface &event_visitor);
 
   Position move() const;
 

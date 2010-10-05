@@ -5,6 +5,5 @@ int main(int argc, char *argv[]) {
   
   world.Run();
 
-  world.Destroy();
   return 0;
 }

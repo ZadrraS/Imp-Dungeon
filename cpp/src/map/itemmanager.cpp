@@ -27,7 +27,7 @@ void ItemManager::DespawnItem(const boost::uuids::uuid &id) {
   // TODO(ZadrraS): Make this not explode in your face when handed a bad id.
 }
 
-Item *ItemManager::item(const boost::uuids::uuid &id) {
+Item *ItemManager::GetItem(const boost::uuids::uuid &id) {
   return items_[id];
   // TODO(ZadrraS): Make this return NULL if a bad id is passed.
 }

@@ -27,7 +27,7 @@ void EntityManager::DespawnEntity(const boost::uuids::uuid &id) {
   // TODO(ZadrraS): Make this not explode in your face when handed a bad id.
 }
 
-Entity *EntityManager::entity(const boost::uuids::uuid &id) {
+Entity *EntityManager::GetEntity(const boost::uuids::uuid &id) {
   return entities_[id];
   // TODO(ZadrraS): Make this return NULL if a bad id is passed.
 }

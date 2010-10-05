@@ -8,10 +8,10 @@
 namespace impdungeon {
 
 enum Tile {
-  NON_TILE,
-  GROUND,
-  WATER,
-  WALL
+  kNonTile,
+  kGround,
+  kWater,
+  kWall
 };
 
 /*-------------------
@@ -23,7 +23,7 @@ class Map {
   virtual ~Map();
 
   bool IsPassable(const Position &position) const;
-  Tile tile(const Position &position) const;
+  Tile GetTile(const Position &position) const;
 
   int width();
   int height();

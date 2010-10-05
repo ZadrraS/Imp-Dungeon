@@ -70,8 +70,6 @@ void World::Init() {
 
   boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
   entities_[entity_id] = position;
-
-
 }
 
 void World::Run() {
@@ -87,7 +85,7 @@ void World::PushEvent(Event *event) {
 }
 
 void World::Visit(MoveEvent &move_event) {
-  if (entity_manager_.entity(move_event.source()) != NULL) {
+  if (entity_manager_.GetEntity(move_event.source()) != NULL) {
     const Position &entity_position = entities_[move_event.source()];
     if (map_->IsPassable(move_event.move()) && 
         entity_position.IsNextTo(move_event.move())) {

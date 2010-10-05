@@ -25,7 +25,7 @@ class EntityManager {
   // Removes a registered entity from the system and deteles it.
   void DespawnEntity(const boost::uuids::uuid &id);
 
-  Entity *entity(const boost::uuids::uuid &id);
+  Entity *GetEntity(const boost::uuids::uuid &id);
 
  private:
   boost::unordered_map<boost::uuids::uuid, Entity *> entities_;

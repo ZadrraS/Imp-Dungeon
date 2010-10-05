@@ -32,7 +32,7 @@ bool Inventory::RemoveItem(boost::uuids::uuid &id) {
   return false;
 }
 
-Item *Inventory::item(boost::uuids::uuid &id) {
+Item *Inventory::GetItem(boost::uuids::uuid &id) {
   BOOST_FOREACH(Item *item, items_) {
     if (item->id() == id) {
       return item;

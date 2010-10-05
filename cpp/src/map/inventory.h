@@ -27,7 +27,7 @@ class Inventory {
 
   // Returns an item by its id.
   // If an item specified is not in the inventory NULL is returned.
-  Item *item(boost::uuids::uuid &id);
+  Item *GetItem(boost::uuids::uuid &id);
 
   std::vector<Item *>::iterator begin();
   std::vector<Item *>::iterator end();

@@ -43,11 +43,11 @@ Map *MapLoader::GetMap() const {
       char tile_rep;
       map_file >> tile_rep;
       if (tile_rep == '#')
-         tiles[y * width + x] = WALL;
+         tiles[y * width + x] = kWall;
       else if (tile_rep == '~')
-        tiles[y * width + x] = WATER;
+        tiles[y * width + x] = kWater;
       else
-        tiles[y * width + x] = GROUND;
+        tiles[y * width + x] = kGround;
 
       // TODO(ZadrraS): Error checking
     }

@@ -13,19 +13,19 @@ Map::~Map() {
 }
 
 bool Map::IsPassable(const Position &position) const {
-  if (tile(position) != GROUND)
+  if (GetTile(position) != kGround)
     return true;
 
   return false;
 }
 
-Tile Map::tile(const Position &position) const {
+Tile Map::GetTile(const Position &position) const {
   if (position.x() > 0 && position.y() > 0 &&
      position.x() < width_ && position.y() < height_) {
     return tiles_[position.y() * width_ + position.x()];
   }
   else {
-    return NON_TILE;
+    return kNonTile;
   }
 }
 

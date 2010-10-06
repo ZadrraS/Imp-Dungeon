@@ -26,7 +26,7 @@ class Server {
   struct sockaddr_in client_address_;
 };
 
-}  // namespace network
+}  // namespace impdungeon
 
-#endif IMPDUNGEON_NETWORK_SERVER_H_
+#endif  // IMPDUNGEON_NETWORK_SERVER_H_
 

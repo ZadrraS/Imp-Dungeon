@@ -1,4 +1,6 @@
-#include "server.h"
+#include "network/server.h"
+
+#include "network/events/eventcodec.h"
 
 namespace impdungeon {
 
@@ -14,20 +16,21 @@ void Server::Init() {
   listen_socket_ = socket(AF_INET, SOCK_STREAM, 0);
   server_address_.sin_family = AF_INET;
   server_address_.sin_addr.s_addr = htonl(INADDR_ANY); 
-  server_address_.sin_port = htons(port);
+  server_address_.sin_port = htons(port_);
 }
 
 void Server::Listen() {
   socklen_t client_address_length;
   bind(listen_socket_, (struct sockaddr *)&server_address_, 
-       sizeof(server_address_);
+       sizeof(server_address_));
   listen(listen_socket_, 5);
-  client_socket_ = accept(listen_socket_, (struct sockaddr*)&client_address_, 
-                          &client_address_length);
+  connect_socket_ = accept(listen_socket_, (struct sockaddr*)&client_address_, 
+                           &client_address_length);
 
-  int8_t buffer[1024];
+  int8_t buffer[EventCodec::kCodeSize];
   while (true) {
-    recv(client_socket_, buffer, sizeof(buffer), 0);
+    recv(connect_socket_, buffer, sizeof(buffer), 0);
+    
   }
 }
 

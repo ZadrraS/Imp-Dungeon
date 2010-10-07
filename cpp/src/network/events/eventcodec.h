@@ -15,8 +15,8 @@ class EventCodec : public EventVisitorInterface {
   EventCodec();
   virtual ~EventCodec();
 
-  uint8_t *Encode(Event &event);
-  Event *Decode(uint8_t *code);
+  char *Encode(Event &event);
+  Event *Decode(char *code);
 
   // Inherited from the EventVisitorInterface
   void Visit(MoveEvent &move_event);
@@ -26,7 +26,7 @@ class EventCodec : public EventVisitorInterface {
     kMoveEvent
   };
 
-  uint8_t *coded_event_;
+  char *coded_event_;
 };
 
 }  // namespace impdungeon

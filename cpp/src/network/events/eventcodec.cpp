@@ -13,24 +13,25 @@ EventCodec::EventCodec() {
 EventCodec::~EventCodec() {
 
 }
-EventTypes
-uint8_t *EventCodec::Encode(Event &event) {
+
+char *EventCodec::Encode(Event &event) {
   event.Accept(*this);
 
   return coded_event_;
 }
 
-Event *EventCodec::Decode(uint8_t *code) {
+Event *EventCodec::Decode(char *code) {
   EventTypes event_type = ((EventTypes *)code)[0];
   Event *event;  
 
   // TODO(ZadrraS): All event types have to be coded in.
   switch (event_type) {
     case kMoveEvent: {
-      event = new MoveEvent;
-      boost::uuids::uuid source = *((char *)code + sizeof(EventTypes));
-      Position position = *((char *)code + sizeof(EventTypes) + 
+      
+      boost::uuids::uuid source = *(boost::uuids::uuid *)((char *)code + sizeof(EventTypes));
+      Position position = *(Position *)((char *)code + sizeof(EventTypes) + 
                           sizeof(boost::uuids::uuid));
+      event = new MoveEvent(source, position);
       break;
     }    
     default: {
@@ -42,7 +43,7 @@ Event *EventCodec::Decode(uint8_t *code) {
 }
 
 void EventCodec::Visit(MoveEvent &move_event) {
-  coded_event_ = new uint8_t [sizeof(EventTypes) + sizeof(move_event)];
+  coded_event_ = new char [sizeof(EventTypes) + sizeof(move_event)];
   ((EventTypes *)coded_event_)[0] = kMoveEvent;
   memcpy((EventTypes *)coded_event_ + 1, &move_event, sizeof(move_event));
 }

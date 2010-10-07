@@ -1,9 +1,10 @@
-#include "world.h"
+#include "network/server.h"
 
 int main(int argc, char *argv[]) {
-  impdungeon::World world("box", "items.json", "entities.json");
+  impdungeon::Server server(60000);
   
-  world.Run();
+  server.Init();
+  server.Run();
 
   return 0;
 }

@@ -7,6 +7,9 @@
 #include <arpa/inet.h>
 #include <stdint.h>
 
+#include "network/events/eventcodec.h"
+#include "world.h"
+
 namespace impdungeon {
 
 class Server {
@@ -15,7 +18,7 @@ class Server {
   ~Server();
 
   void Init();
-  void Listen();
+  void Run();
 
  private:
   uint16_t port_;
@@ -24,6 +27,9 @@ class Server {
 
   struct sockaddr_in server_address_;
   struct sockaddr_in client_address_;
+
+  EventCodec event_codec_;
+  World world_;
 };
 
 }  // namespace impdungeon

@@ -4,7 +4,9 @@
 
 namespace impdungeon {
 
-Server::Server(uint16_t port) : port_(port) {
+Server::Server(uint16_t port)
+  : port_(port), 
+    world_("box", "items.json", "entities.json") {
 
 }
 
@@ -19,7 +21,7 @@ void Server::Init() {
   server_address_.sin_port = htons(port_);
 }
 
-void Server::Listen() {
+void Server::Run() {
   socklen_t client_address_length;
   bind(listen_socket_, (struct sockaddr *)&server_address_, 
        sizeof(server_address_));
@@ -27,9 +29,10 @@ void Server::Listen() {
   connect_socket_ = accept(listen_socket_, (struct sockaddr*)&client_address_, 
                            &client_address_length);
 
-  int8_t buffer[EventCodec::kCodeSize];
+  char buffer[EventCodec::kCodeSize];
   while (true) {
     recv(connect_socket_, buffer, sizeof(buffer), 0);
+    world_.PushEvent(event_codec_.Decode(buffer));
     
   }
 }

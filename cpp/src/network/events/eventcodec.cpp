@@ -13,7 +13,7 @@ EventCodec::EventCodec() {
 EventCodec::~EventCodec() {
 
 }
-
+EventTypes
 uint8_t *EventCodec::Encode(Event &event) {
   event.Accept(*this);
 
@@ -27,7 +27,10 @@ Event *EventCodec::Decode(uint8_t *code) {
   // TODO(ZadrraS): All event types have to be coded in.
   switch (event_type) {
     case kMoveEvent: {
-      event = (MoveEvent *)((EventTypes *)code + 1);
+      event = new MoveEvent;
+      boost::uuids::uuid source = *((char *)code + sizeof(EventTypes));
+      Position position = *((char *)code + sizeof(EventTypes) + 
+                          sizeof(boost::uuids::uuid));
       break;
     }    
     default: {
@@ -41,7 +44,7 @@ Event *EventCodec::Decode(uint8_t *code) {
 void EventCodec::Visit(MoveEvent &move_event) {
   coded_event_ = new uint8_t [sizeof(EventTypes) + sizeof(move_event)];
   ((EventTypes *)coded_event_)[0] = kMoveEvent;
-  memcpy((int *)coded_event_ + 1, &move_event, sizeof(move_event));
+  memcpy((EventTypes *)coded_event_ + 1, &move_event, sizeof(move_event));
 }
 
 }  // namespace impdungeon

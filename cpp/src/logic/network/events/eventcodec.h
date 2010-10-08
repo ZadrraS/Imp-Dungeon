@@ -18,13 +18,13 @@ class EventCodec : public EventVisitorInterface {
   char *Encode(Event &event);
   Event *Decode(char *code);
 
-  // Inherited from the EventVisitorInterface
-  void Visit(MoveEvent &move_event);
-
  private:
   enum EventTypes {
     kMoveEvent
   };
+
+  // Inherited from the EventVisitorInterface
+  void Visit(MoveEvent &move_event);
 
   char *coded_event_;
 };

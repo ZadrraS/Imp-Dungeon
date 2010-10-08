@@ -10,3 +10,4 @@ client.exe:
 	mv src/client.exe ./
 clean:
 	make clean -C src
+	rm *.exe

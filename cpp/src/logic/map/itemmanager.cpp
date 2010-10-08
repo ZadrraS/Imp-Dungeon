@@ -17,6 +17,9 @@ const boost::uuids::uuid ItemManager::SpawnItem(Item *item) {
     item->AssignId(uuid_generator_());
     items_[item->id()] = item;
   }
+  if (items_.count(item->id()) == 0){
+    items_[item->id()] = item;
+  }
 
   return item->id();
 }

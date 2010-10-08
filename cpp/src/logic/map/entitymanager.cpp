@@ -15,6 +15,8 @@ EntityManager::~EntityManager() {
 const boost::uuids::uuid EntityManager::SpawnEntity(Entity *entity) {
   if (entity->id().is_nil()) {
     entity->AssignId(uuid_generator_());
+  }
+  if (entities_.count(entity->id()) == 0){
     entities_[entity->id()] = entity;
   }
 

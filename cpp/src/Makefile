@@ -2,21 +2,29 @@ CC=g++
 CFLAGS=-Wall -c -g
 LDFLAGS=
 INCLDS=-I.
-SOURCES=main.cpp map/attributes/boundedattribute.cpp map/entity.cpp \
-        map/entitymanager.cpp map/map.cpp map/attributes/position.cpp \
-        world.cpp  map/items/item.cpp map/itemmanager.cpp \
-        map/inventory.cpp map/items/weapon.cpp map/items/potion.cpp \
-        loaders/maploader.cpp loaders/entityloader.cpp loaders/itemloader.cpp \
-        loaders/malformeddata.cpp \
-        network/events/event.cpp network/events/moveevent.cpp \
-        network/events/eventcodec.cpp network/server.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=server
 
-all: $(SOURCES) $(EXECUTABLE)
-	
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+SOURCES=logic/map/attributes/boundedattribute.cpp logic/map/entity.cpp \
+        logic/map/entitymanager.cpp logic/map/map.cpp logic/map/attributes/position.cpp \
+        logic/world.cpp  logic/map/items/item.cpp logic/map/itemmanager.cpp \
+        logic/map/inventory.cpp logic/map/items/weapon.cpp logic/map/items/potion.cpp \
+        logic/loaders/maploader.cpp logic/loaders/entityloader.cpp logic/loaders/itemloader.cpp \
+        logic/loaders/malformeddata.cpp \
+        logic/network/events/event.cpp logic/network/events/moveevent.cpp \
+        logic/network/events/eventcodec.cpp
+SSOURCES=server/main.cpp server/server.cpp
+CSOURCES=
+
+OBJECTS=$(SOURCES:.cpp=.o)
+SOBJECTS=$(SSOURCES:.cpp=.o)
+COBJECTS=$(CSOURCES:.cpp=.o)
+
+all: $(SOURCES) $(SSOURCES) $(CSOURCES) server client
+
+server.exe: $(OBJECTS) $(SOBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) $(SOBJECTS) -o $@
+
+client.exe: $(OBJECTS) $(COBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) $(COBJECTS) -o $@
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLDS) $< -o $@

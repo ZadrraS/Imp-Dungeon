@@ -11,3 +11,4 @@ client.exe:
 clean:
 	make clean -C src
 	rm *.exe
+.PHONY: server.exe client.exe

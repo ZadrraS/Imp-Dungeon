@@ -1,6 +1,8 @@
 #include "logic/network/events/eventcodec.h"
 
 #include <cstring>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "logic/network/events/moveevent.h"
 
@@ -27,10 +29,12 @@ Event *EventCodec::Decode(char *code) {
   // TODO(ZadrraS): All event types have to be coded in.
   switch (event_type) {
     case kMoveEvent: {
-      
-      boost::uuids::uuid source = *(boost::uuids::uuid *)((char *)code + sizeof(EventTypes));
+      char bytes[16];
+      memcpy(bytes, (char *)code + sizeof(EventTypes), sizeof(bytes));
+      boost::uuids::string_generator gen;
+      boost::uuids::uuid source(gen(std::string(bytes)));
       Position position = *(Position *)((char *)code + sizeof(EventTypes) + 
-                          sizeof(boost::uuids::uuid));
+                          sizeof(source.data));
       event = new MoveEvent(source, position);
       break;
     }    
@@ -43,9 +47,17 @@ Event *EventCodec::Decode(char *code) {
 }
 
 void EventCodec::Visit(MoveEvent &move_event) {
-  coded_event_ = new char [sizeof(EventTypes) + sizeof(move_event)];
-  ((EventTypes *)coded_event_)[0] = kMoveEvent;
-  memcpy((EventTypes *)coded_event_ + 1, &move_event, sizeof(move_event));
+  boost::uuids::uuid id = move_event.source();
+  Position move = move_event.move();
+  EventTypes type = kMoveEvent;
+
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  
+  memcpy(coded_event_, &type, sizeof(type));
+  memcpy((char *)coded_event_ + sizeof(kMoveEvent), id.data, sizeof(id.data));
+  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + sizeof(id.data), 
+         &move, sizeof(move));
 }
 
 }  // namespace impdungeon

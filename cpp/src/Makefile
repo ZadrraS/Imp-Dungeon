@@ -18,12 +18,15 @@ OBJECTS=$(SOURCES:.cpp=.o)
 SOBJECTS=$(SSOURCES:.cpp=.o)
 COBJECTS=$(CSOURCES:.cpp=.o)
 
-all: $(SOURCES) $(SSOURCES) $(CSOURCES) server client
+SERVER=server.exe
+CLIENT=client.exe
 
-server.exe: $(OBJECTS) $(SOBJECTS)
+all: $(SERVER) $(CLIENT)
+
+$(SERVER): $(OBJECTS) $(SOBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) $(SOBJECTS) -o $@
 
-client.exe: $(OBJECTS) $(COBJECTS)
+$(CLIENT): $(OBJECTS) $(COBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) $(COBJECTS) -o $@
 
 .cpp.o:

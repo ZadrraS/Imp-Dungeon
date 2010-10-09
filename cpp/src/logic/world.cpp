@@ -14,7 +14,15 @@
 #include "logic/loaders/entityloader.h"
 #include "logic/loaders/maploader.h"
 #include "logic/loaders/itemloader.h"
+
 #include "logic/network/events/event.h"
+#include "logic/network/events/loginevent.h"
+#include "logic/network/events/logoffevent.h"
+#include "logic/network/events/attackevent.h"
+#include "logic/network/events/takeevent.h"
+#include "logic/network/events/dropevent.h"
+#include "logic/network/events/equipevent.h"
+#include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
 
 namespace impdungeon {
@@ -84,6 +92,18 @@ void World::PushEvent(Event *event) {
   events_.push(event);
 }
 
+void World::Visit(LoginEvent &login_event) {
+
+}
+
+void World::Visit(LogoffEvent &logoff_event) {
+
+}
+
+void World::Visit(AttackEvent &attack_event) {
+
+}
+
 void World::Visit(MoveEvent &move_event) {
   if (entity_manager_.GetEntity(move_event.source()) != NULL) {
     const Position &entity_position = entities_[move_event.source()];
@@ -92,6 +112,22 @@ void World::Visit(MoveEvent &move_event) {
       entities_[move_event.source()] = move_event.move();
     }
   }
+}
+
+void World::Visit(TakeEvent &take_event) {
+
+}
+
+void World::Visit(DropEvent &drop_event) {
+
+}
+
+void World::Visit(EquipEvent &equip_event) {
+
+}
+
+void World::Visit(UseEvent &use_event) {
+
 }
 
 }  // namespace impdungeon

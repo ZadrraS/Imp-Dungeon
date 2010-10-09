@@ -4,6 +4,14 @@
 #include <boost/uuid/string_generator.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "logic/network/events/event.h"
+#include "logic/network/events/loginevent.h"
+#include "logic/network/events/logoffevent.h"
+#include "logic/network/events/attackevent.h"
+#include "logic/network/events/takeevent.h"
+#include "logic/network/events/dropevent.h"
+#include "logic/network/events/equipevent.h"
+#include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
 
 namespace impdungeon {
@@ -46,6 +54,18 @@ Event *EventCodec::Decode(char *code) {
   return event;
 }
 
+void EventCodec::Visit(LoginEvent &login_event) {
+
+}
+
+void EventCodec::Visit(LogoffEvent &logoff_event) {
+
+}
+
+void EventCodec::Visit(AttackEvent &attack_event) {
+
+}
+
 void EventCodec::Visit(MoveEvent &move_event) {
   boost::uuids::uuid id = move_event.source();
   Position move = move_event.move();
@@ -58,6 +78,22 @@ void EventCodec::Visit(MoveEvent &move_event) {
   memcpy((char *)coded_event_ + sizeof(kMoveEvent), id.data, sizeof(id.data));
   memcpy((char *)coded_event_ + sizeof(kMoveEvent) + sizeof(id.data), 
          &move, sizeof(move));
+}
+
+void EventCodec::Visit(TakeEvent &take_event) {
+
+}
+
+void EventCodec::Visit(DropEvent &drop_event) {
+
+}
+
+void EventCodec::Visit(EquipEvent &equip_event) {
+
+}
+
+void EventCodec::Visit(UseEvent &use_event) {
+
 }
 
 }  // namespace impdungeon

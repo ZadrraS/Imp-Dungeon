@@ -35,7 +35,14 @@ class World : public EventVisitorInterface {
   void PushEvent(Event *event);
 
   // Inherited from the EventVisitorInterface
+  void Visit(LoginEvent &login_event);
+  void Visit(LogoffEvent &logoff_event);
+  void Visit(AttackEvent &attack_event);
   void Visit(MoveEvent &move_event);
+  void Visit(TakeEvent &take_event);
+  void Visit(DropEvent &drop_event);
+  void Visit(EquipEvent &equip_event);
+  void Visit(UseEvent &use_event);
 
  private:
   Map *map_;

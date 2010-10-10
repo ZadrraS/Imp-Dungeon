@@ -16,7 +16,7 @@ namespace impdungeon {
   uint16_t port_;
   
 
-Client::Client(const std::string &ip, uint16_t port) {
+Client::Client(const std::string &ip, uint16_t port) : socket_(-1) {
   memset(&server_address_, 0, sizeof(server_address_));
   
   server_address_.sin_family = AF_INET;
@@ -37,6 +37,9 @@ void Client::Init() {
 }
 
 void Client::Run() {
+  if (socket_ == -1)
+    throw NetworkError("Client not initialized.");
+
   if (connect(socket_, (struct sockaddr*)&server_address_, 
               sizeof(server_address_)) == -1)
     throw NetworkError("Error connecting to host.");

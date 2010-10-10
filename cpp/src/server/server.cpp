@@ -20,7 +20,7 @@
 namespace impdungeon {
 
 Server::Server(uint16_t port)
-  : world_("box", "items.json", "entities.json") {
+  : listen_socket_(-1), world_("box", "items.json", "entities.json") {
   memset(&server_address_, 0, sizeof(server_address_));
 
   server_address_.sin_family = AF_INET;
@@ -42,6 +42,9 @@ void Server::Init() {
 }
 
 void Server::Run() {
+  if (listen_socket_ == -1)
+    throw NetworkError("Server not initialized.");
+
   if (listen(listen_socket_, 5) != 0)
     throw NetworkError("Error while trying to listen().");
 

@@ -2,6 +2,13 @@
 
 #include "logic/network/events/eventcodec.h"
 
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include "logic/map/attributes/position.h"
+#include "logic/network/events/moveevent.h"
+
 namespace impdungeon {
 
 Server::Server(uint16_t port)

@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "logic/network/events/event.h"
@@ -37,12 +38,15 @@ Event *EventCodec::Decode(char *code) {
   // TODO(ZadrraS): All event types have to be coded in.
   switch (event_type) {
     case kMoveEvent: {
-      char bytes[16];
+      char bytes[36];
       memcpy(bytes, (char *)code + sizeof(EventTypes), sizeof(bytes));
       boost::uuids::string_generator gen;
       boost::uuids::uuid source(gen(std::string(bytes)));
-      Position position = *(Position *)((char *)code + sizeof(EventTypes) + 
-                          sizeof(source.data));
+      int x, y;
+      memcpy(&x, (char *)code + sizeof(EventTypes) + sizeof(bytes), sizeof(x));
+      memcpy(&y, (char *)code + sizeof(EventTypes) + sizeof(bytes), 
+             sizeof(x) + sizeof(y));
+      Position position(x, y);
       event = new MoveEvent(source, position);
       break;
     }    
@@ -67,17 +71,22 @@ void EventCodec::Visit(AttackEvent &attack_event) {
 }
 
 void EventCodec::Visit(MoveEvent &move_event) {
-  boost::uuids::uuid id = move_event.source();
+  std::string id = boost::lexical_cast<std::string>(move_event.source());
   Position move = move_event.move();
   EventTypes type = kMoveEvent;
 
   coded_event_ = new char [kCodeSize];
   memset(coded_event_, 0, kCodeSize);
   
+  // Structure: [EventTypes - 1int][UUID - 16char][Position - 2int]
   memcpy(coded_event_, &type, sizeof(type));
-  memcpy((char *)coded_event_ + sizeof(kMoveEvent), id.data, sizeof(id.data));
-  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + sizeof(id.data), 
-         &move, sizeof(move));
+  memcpy((char *)coded_event_ + sizeof(kMoveEvent), id.c_str(), id.size());
+  int x, y;
+  x = move.x();
+  y = move.y();
+  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + id.size(), &x, sizeof(x));
+  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + id.size() + sizeof(x), 
+         &y, sizeof(y));
 }
 
 void EventCodec::Visit(TakeEvent &take_event) {

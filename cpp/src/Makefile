@@ -7,7 +7,7 @@ SOURCES:=$(wildcard logic/*.cpp logic/loaders/*.cpp logic/map/*.cpp \
                     logic/map/attributes/*.cpp logic/map/items/*.cpp \
                     logic/network/*.cpp logic/network/events/*.cpp)
 SSOURCES=server/main.cpp server/server.cpp
-CSOURCES=
+CSOURCES=client/main.cpp client/client.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
 SOBJECTS=$(SSOURCES:.cpp=.o)

@@ -14,7 +14,7 @@
 #include "logic/network/events/equipevent.h"
 #include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
-
+#include <iostream>
 namespace impdungeon {
 
 EventCodec::EventCodec() {
@@ -33,6 +33,7 @@ char *EventCodec::Encode(Event &event) {
 
 Event *EventCodec::Decode(char *code) {
   size_t offset = 0; 
+  
   EventTypes event_type = ExtractType(code, offset);
   Event *event;
 
@@ -46,6 +47,7 @@ Event *EventCodec::Decode(char *code) {
     }
     case kLogoffEvent: {
       boost::uuids::uuid source = ExtractUuid(code, offset);
+      
       event = new LogoffEvent(source);
       break;
     }
@@ -229,7 +231,8 @@ void EventCodec::Visit(UseEvent &use_event) {
 
 void EventCodec::InsertType(EventTypes event_type, size_t &offset) {
   memcpy(coded_event_ + offset, &event_type, sizeof(event_type));
-  offset += sizeof(event_type);
+
+  offset += sizeof(EventTypes);
 }
 
 void EventCodec::InsertInt(int value, size_t &offset) {

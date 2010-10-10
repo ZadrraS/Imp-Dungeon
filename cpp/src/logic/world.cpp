@@ -26,6 +26,8 @@
 #include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
 
+#include <iostream>
+
 namespace impdungeon {
 
 World::World(const std::string &map_file_name, 
@@ -94,7 +96,8 @@ void World::PushEvent(Event *event) {
 }
 
 void World::Visit(LoginEvent &login_event) {
-
+  std::cout << "Katik prisijunge " << login_event.user_name() 
+            << " su slaptazodziu " << login_event.password() << "." << std::endl;
 }
 
 void World::Visit(LogoffEvent &logoff_event) {

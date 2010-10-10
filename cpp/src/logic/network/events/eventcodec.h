@@ -23,6 +23,7 @@ class EventCodec : public EventVisitorInterface {
 
  private:
   enum EventTypes {
+    kNotAnEvent,
     kLoginEvent,
     kLogoffEvent,
     kAttackEvent,

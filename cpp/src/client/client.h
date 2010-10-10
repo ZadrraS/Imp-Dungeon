@@ -1,14 +1,7 @@
 #ifndef IMPDUNGEON_CLIENT_CLIENT_H_
 #define IMPDUNGEON_CLIENT_CLIENT_H_
 
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <stdint.h>
 
 #include "logic/network/events/eventcodec.h"

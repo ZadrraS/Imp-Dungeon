@@ -2,10 +2,15 @@
 
 #include "logic/network/events/eventcodec.h"
 
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_io.hpp>
+
 #include "logic/map/attributes/position.h"
 #include "logic/network/events/moveevent.h"
 #include "logic/network/networkerror.h"

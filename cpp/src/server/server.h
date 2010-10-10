@@ -1,10 +1,7 @@
 #ifndef IMPDUNGEON_SERVER_SERVER_H_
 #define IMPDUNGEON_SERVER_SERVER_H_
 
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <stdint.h>
 
 #include "logic/network/events/eventcodec.h"

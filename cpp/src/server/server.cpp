@@ -20,14 +20,12 @@
 namespace impdungeon {
 
 Server::Server(uint16_t port)
-  : port_(port), 
-    world_("box", "items.json", "entities.json") {
+  : world_("box", "items.json", "entities.json") {
   memset(&server_address_, 0, sizeof(server_address_));
-  memset(&client_address_, 0, sizeof(client_address_));
 
   server_address_.sin_family = AF_INET;
   server_address_.sin_addr.s_addr = htonl(INADDR_ANY); 
-  server_address_.sin_port = htons(port_);
+  server_address_.sin_port = htons(port);
 }
 
 Server::~Server() {
@@ -39,22 +37,26 @@ void Server::Init() {
     throw NetworkError("Error creating listening socket.");
  
   if (bind(listen_socket_, (struct sockaddr *)&server_address_, 
-           sizeof(server_address_)) < 0) 
+           sizeof(server_address_)) == -1) 
     throw NetworkError("Error binding listening socket.");
 }
 
 void Server::Run() {
-  socklen_t client_address_length = sizeof(struct sockaddr);
   if (listen(listen_socket_, 5) != 0)
     throw NetworkError("Error while trying to listen().");
 
   char buffer[EventCodec::kCodeSize];
+  int client_socket;
+  struct sockaddr_in client_address;
+  memset(&client_address, 0, sizeof(client_address));
+
+  socklen_t client_address_length = sizeof(struct sockaddr);
   while (true) {
     memset(&buffer, 0, sizeof(buffer));
-    connect_socket_ = accept(listen_socket_, (struct sockaddr *)&client_address_, 
-                             &client_address_length);
-    int r_len = recv(connect_socket_, buffer, sizeof(buffer), 0);
-    std::cout << "Client: " << inet_ntoa(client_address_.sin_addr) 
+    client_socket = accept(listen_socket_, (struct sockaddr *)&client_address, 
+                           &client_address_length);
+    int r_len = recv(client_socket, buffer, sizeof(buffer), 0);
+    std::cout << "Client: " << inet_ntoa(client_address.sin_addr) 
               << " Received: " << r_len << " bytes." << std::endl;;
 
     Event *event = event_codec_.Decode(buffer);
@@ -62,7 +64,7 @@ void Server::Run() {
       world_.PushEvent(event);
       world_.Run(); 
     }
-    close(connect_socket_);
+    close(client_socket);
   }
 }
 

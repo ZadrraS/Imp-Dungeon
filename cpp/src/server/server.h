@@ -18,12 +18,9 @@ class Server {
   void Run();
 
  private:
-  uint16_t port_;
   int listen_socket_;
-  int connect_socket_;
 
   struct sockaddr_in server_address_;
-  struct sockaddr_in client_address_;
 
   EventCodec event_codec_;
   World world_;

@@ -12,9 +12,18 @@
 #include "logic/network/networkerror.h"
 
 namespace impdungeon {
+  std::string ip_;
+  uint16_t port_;
+  
 
-Client::Client(const std::string &ip, uint16_t port) : ip_(ip), port_(port) {
+Client::Client(const std::string &ip, uint16_t port) {
   memset(&server_address_, 0, sizeof(server_address_));
+  
+  server_address_.sin_family = AF_INET;
+  server_address_.sin_port = htons(port);
+    
+  if (inet_aton(ip.c_str(), &server_address_.sin_addr) == 0)
+    throw NetworkError("Invalid remote IP address.");
 }
 
 Client::~Client() {
@@ -22,11 +31,9 @@ Client::~Client() {
 }
 
 void Client::Init() {
-  socket_ = socket(AF_INET, SOCK_STREAM, 0);  
-  server_address_.sin_family = AF_INET;
-  server_address_.sin_port = htons(port_);
-    
-  inet_aton(ip_.c_str(), &server_address_.sin_addr);
+  socket_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (socket_ == -1)
+    throw NetworkError("Error creating socket.");
 }
 
 void Client::Run() {

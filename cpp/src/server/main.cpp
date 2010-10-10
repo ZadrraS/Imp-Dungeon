@@ -1,5 +1,7 @@
 #include "server/server.h"
 
+#include <iostream>
+
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {

@@ -17,11 +17,9 @@ class Client {
   void Run();
 
  private:
-  std::string ip_;
-  uint16_t port_;
+  struct sockaddr_in server_address_;
   int socket_;
 
-  struct sockaddr_in server_address_;
   EventCodec event_codec_;
 };
 

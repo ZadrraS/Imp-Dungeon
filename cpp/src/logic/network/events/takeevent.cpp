@@ -5,7 +5,7 @@
 namespace impdungeon {
 
 TakeEvent::TakeEvent(boost::uuids::uuid &source, boost::uuids::uuid &target) 
-  : Event(source), target_(target) {
+  : TargetedPlayerEvent(source, target) {
 
 }
 

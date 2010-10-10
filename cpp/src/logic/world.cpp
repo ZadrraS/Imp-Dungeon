@@ -16,6 +16,7 @@
 #include "logic/loaders/itemloader.h"
 
 #include "logic/network/events/event.h"
+#include "logic/network/events/playerevent.h"
 #include "logic/network/events/loginevent.h"
 #include "logic/network/events/logoffevent.h"
 #include "logic/network/events/attackevent.h"

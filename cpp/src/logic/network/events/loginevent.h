@@ -9,12 +9,13 @@ namespace impdungeon {
 
 class LoginEvent : public Event {
  public:
-  LoginEvent(boost::uuids::uuid &source, 
-             const std::string &user_name, 
-             const std::string &password);
+  LoginEvent(const std::string &user_name, const std::string &password);
   virtual ~LoginEvent();
 
   void Accept(EventVisitorInterface &event_visitor);
+
+  std::string user_name();
+  std::string password();
 
  private:
   std::string user_name_;

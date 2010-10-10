@@ -32,24 +32,67 @@ char *EventCodec::Encode(Event &event) {
 }
 
 Event *EventCodec::Decode(char *code) {
-  EventTypes event_type = ((EventTypes *)code)[0];
-  Event *event;  
+  size_t offset = 0; 
+  EventTypes event_type = ExtractType(code, offset);
+  Event *event;
 
-  // TODO(ZadrraS): All event types have to be coded in.
-  switch (event_type) {
+  switch (event_type) {  
+    case kLoginEvent: {
+      std::string user_name = ExtractString(code, offset);
+      std::string password = ExtractString(code, offset);
+
+      event = new LoginEvent(user_name, password);
+      break;
+    }
+    case kLogoffEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      event = new LogoffEvent(source);
+      break;
+    }
+    case kAttackEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      boost::uuids::uuid target = ExtractUuid(code, offset);
+
+      event = new AttackEvent(source, target);
+      break;
+    }
     case kMoveEvent: {
-      char bytes[36];
-      memcpy(bytes, (char *)code + sizeof(EventTypes), sizeof(bytes));
-      boost::uuids::string_generator gen;
-      boost::uuids::uuid source(gen(std::string(bytes)));
-      int x, y;
-      memcpy(&x, (char *)code + sizeof(EventTypes) + sizeof(bytes), sizeof(x));
-      memcpy(&y, (char *)code + sizeof(EventTypes) + sizeof(bytes), 
-             sizeof(x) + sizeof(y));
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      int x = ExtractInt(code, offset);
+      int y = ExtractInt(code, offset);
       Position position(x, y);
+
       event = new MoveEvent(source, position);
       break;
-    }    
+    }
+    case kTakeEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      boost::uuids::uuid target = ExtractUuid(code, offset);
+
+      event = new AttackEvent(source, target);    
+      break;
+    }
+    case kDropEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      boost::uuids::uuid target = ExtractUuid(code, offset);
+
+      event = new AttackEvent(source, target);
+      break;
+    }
+    case kEquipEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      boost::uuids::uuid target = ExtractUuid(code, offset);
+
+      event = new AttackEvent(source, target);
+      break;
+    }
+    case kUseEvent: {
+      boost::uuids::uuid source = ExtractUuid(code, offset);
+      boost::uuids::uuid target = ExtractUuid(code, offset);
+
+      event = new AttackEvent(source, target);
+      break;
+    }
     default: {
       event = NULL;
       break;
@@ -58,52 +101,157 @@ Event *EventCodec::Decode(char *code) {
   return event;
 }
 
-void EventCodec::Visit(LoginEvent &login_event) {
+EventCodec::EventTypes EventCodec::ExtractType(char *data, size_t &offset) {
+  EventTypes event_type;
+  memcpy(&event_type, data + offset, sizeof(EventTypes));
+  offset += sizeof(EventTypes);
 
+  return event_type;
+}
+
+int EventCodec::ExtractInt(char *data, size_t &offset) {
+  int result;
+  memcpy(&result, data + offset, sizeof(result));
+  offset += sizeof(result);
+
+  return result;
+}
+
+std::string EventCodec::ExtractString(char *data, size_t &offset) {
+  int string_size;
+  char *c_string;
+
+  memcpy(&string_size, data + offset, sizeof(string_size));
+  c_string = new char [string_size];
+  offset += sizeof(string_size);
+  memcpy(c_string, data + offset, string_size);
+  offset += string_size;
+
+  return std::string(c_string);
+}
+
+boost::uuids::uuid EventCodec::ExtractUuid(char *data, size_t &offset) {
+  char id_str[36];
+  memcpy(id_str, data + offset, sizeof(id_str));
+  boost::uuids::string_generator gen;
+  boost::uuids::uuid id(gen(std::string(id_str)));
+  offset += sizeof(id_str);
+
+  return id;
+}
+
+void EventCodec::Visit(LoginEvent &login_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
+
+  // Structure: [EventTypes - 1int][size - 1int][std::string - size][size - 1int][std::string - size]
+  InsertType(kLoginEvent, offset);
+  InsertString(login_event.user_name(), offset);
+  InsertString(login_event.password(), offset);
 }
 
 void EventCodec::Visit(LogoffEvent &logoff_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kLogoffEvent, offset);
+  InsertUuid(logoff_event.source(), offset);
 }
 
 void EventCodec::Visit(AttackEvent &attack_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kAttackEvent, offset);
+  InsertUuid(attack_event.source(), offset);
+  InsertUuid(attack_event.target(), offset);
 }
 
 void EventCodec::Visit(MoveEvent &move_event) {
-  std::string id = boost::lexical_cast<std::string>(move_event.source());
-  Position move = move_event.move();
-  EventTypes type = kMoveEvent;
-
   coded_event_ = new char [kCodeSize];
   memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
   
-  // Structure: [EventTypes - 1int][UUID - 16char][Position - 2int]
-  memcpy(coded_event_, &type, sizeof(type));
-  memcpy((char *)coded_event_ + sizeof(kMoveEvent), id.c_str(), id.size());
+  // Structure: [EventTypes - 1int][UUID - 36char][Position - 2int]
+  InsertType(kMoveEvent, offset);
+  InsertUuid(move_event.source(), offset);
   int x, y;
-  x = move.x();
-  y = move.y();
-  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + id.size(), &x, sizeof(x));
-  memcpy((char *)coded_event_ + sizeof(kMoveEvent) + id.size() + sizeof(x), 
-         &y, sizeof(y));
+  x = move_event.move().x();
+  y = move_event.move().y();
+  memcpy(coded_event_ + offset, &x, sizeof(x));
+  offset += sizeof(x);
+  memcpy(coded_event_ + offset, &y, sizeof(y));
+  offset += sizeof(y);
 }
 
 void EventCodec::Visit(TakeEvent &take_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kTakeEvent, offset);
+  InsertUuid(take_event.source(), offset);
+  InsertUuid(take_event.target(), offset);
 }
 
 void EventCodec::Visit(DropEvent &drop_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kDropEvent, offset);
+  InsertUuid(drop_event.source(), offset);
+  InsertUuid(drop_event.target(), offset);
 }
 
 void EventCodec::Visit(EquipEvent &equip_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kEquipEvent, offset);
+  InsertUuid(equip_event.source(), offset);
+  InsertUuid(equip_event.target(), offset);
 }
 
 void EventCodec::Visit(UseEvent &use_event) {
+  coded_event_ = new char [kCodeSize];
+  memset(coded_event_, 0, kCodeSize);
+  size_t offset = 0;
 
+  InsertType(kUseEvent, offset);
+  InsertUuid(use_event.source(), offset);
+  InsertUuid(use_event.target(), offset);
 }
+
+void EventCodec::InsertType(EventTypes event_type, size_t &offset) {
+  memcpy(coded_event_ + offset, &event_type, sizeof(event_type));
+  offset += sizeof(event_type);
+}
+
+void EventCodec::InsertInt(int value, size_t &offset) {
+  memcpy(coded_event_ + offset, &value, sizeof(value));
+  offset += sizeof(value);
+}
+
+void EventCodec::InsertString(const std::string &string, size_t &offset) {
+  int string_size = string.size() + 1; 
+  memcpy(coded_event_ + offset, &string_size, sizeof(string_size));
+  offset += sizeof(string_size);
+  memcpy(coded_event_ + offset, string.c_str(), string_size);
+  offset += string_size;
+}
+
+void EventCodec::InsertUuid(const boost::uuids::uuid &id, size_t &offset) {
+  std::string id_str = boost::lexical_cast<std::string>(id);
+  
+  memcpy(coded_event_ + offset, id_str.c_str(), id_str.size());
+  offset += id_str.size();
+}
+
 
 }  // namespace impdungeon
 

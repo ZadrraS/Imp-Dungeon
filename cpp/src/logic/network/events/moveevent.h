@@ -1,12 +1,12 @@
 #ifndef IMPDUNGEON_LOGIC_NETWORK_EVENTS_MOVEEVENT_H_
 #define IMPDUNGEON_LOGIC_NETWORK_EVENTS_MOVEEVENT_H_
 
-#include "logic/network/events/event.h"
+#include "logic/network/events/playerevent.h"
 #include "logic/map/attributes/position.h"
 
 namespace impdungeon {
 
-class MoveEvent : public Event {
+class MoveEvent : public PlayerEvent {
  public:
   MoveEvent(boost::uuids::uuid &source, Position &move);
   virtual ~MoveEvent(); 

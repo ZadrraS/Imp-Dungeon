@@ -2,9 +2,12 @@
 #define IMPDUNGEON_LOGIC_NETWORK_EVENTS_EVENTCODEC_H_
 
 #include <stdint.h>
+#include <string>
 
 #include "logic/network/events/event.h"
 #include "logic/network/events/eventvisitorinterface.h"
+
+#include <boost/uuid/uuid.hpp>
 
 namespace impdungeon {
 
@@ -20,8 +23,20 @@ class EventCodec : public EventVisitorInterface {
 
  private:
   enum EventTypes {
-    kMoveEvent
+    kLoginEvent,
+    kLogoffEvent,
+    kAttackEvent,
+    kMoveEvent,
+    kTakeEvent,
+    kDropEvent,
+    kEquipEvent,
+    kUseEvent
   };
+
+  EventTypes ExtractType(char *data, size_t &offset);
+  int ExtractInt(char *data, size_t &offset);
+  std::string ExtractString(char *data, size_t &offset);
+  boost::uuids::uuid ExtractUuid(char *data, size_t &offset);
 
   // Inherited from the EventVisitorInterface
   void Visit(LoginEvent &login_event);
@@ -32,6 +47,11 @@ class EventCodec : public EventVisitorInterface {
   void Visit(DropEvent &drop_event);
   void Visit(EquipEvent &equip_event);
   void Visit(UseEvent &use_event);
+
+  void InsertType(EventTypes event_type, size_t &offset);
+  void InsertInt(int value, size_t &offset);
+  void InsertString(const std::string &string, size_t &offset);
+  void InsertUuid(const boost::uuids::uuid &id, size_t &offset);
 
   char *coded_event_;
 };

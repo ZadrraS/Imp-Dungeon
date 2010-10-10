@@ -5,7 +5,7 @@
 namespace impdungeon {
 
 DropEvent::DropEvent(boost::uuids::uuid &source, boost::uuids::uuid &target) 
-  : Event(source), target_(target) {
+  : TargetedPlayerEvent(source, target) {
 
 }
 

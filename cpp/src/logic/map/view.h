@@ -1,5 +1,5 @@
-#ifndef IMPDUNGEON_CLIENT_VIEW_VIEW_H_
-#define IMPDUNGEON_CLIENT_VIEW_VIEW_H_
+#ifndef IMPDUNGEON_LOGIC_MAP_VIEW_H_
+#define IMPDUNGEON_LOGIC_MAP_VIEW_H_
 
 namespace impdungeon {
 
@@ -12,7 +12,7 @@ class View {
 
   void Update(char *tiles);
 
-  char GetTile(const Position &position);
+  char GetTile(const Position &position) const;
 
   int width() const;
   int height() const;
@@ -25,5 +25,5 @@ class View {
 
 }  // namespace impdungeon
 
-#endif  // IMPDUNGEON_CLIENT_VIEW_VIEW_H_
+#endif  // IMPDUNGEON_LOGIC_MAP_VIEW_H_
 

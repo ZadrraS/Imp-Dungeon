@@ -5,15 +5,19 @@ namespace impdungeon {
 
 class MessageVisitorInterface;
 
+class View;
+
 class ViewUpdateMessage {
  public:
-  ViewUpdateMessage(char *view);
+  ViewUpdateMessage(View *view);
   virtual ~ViewUpdateMessage();
 
-  virtual void Accept(MessageVisitorInterface &message_visitor) = 0;
+  void Accept(MessageVisitorInterface &message_visitor);
+
+  View *view();
 
  private:
-  char *view_;  
+  View *view_;  
 };
 
 }  // namespace impdungeon

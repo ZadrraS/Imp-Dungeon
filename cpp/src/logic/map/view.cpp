@@ -1,4 +1,4 @@
-#include "client/view/view.h"
+#include "logic/map/view.h"
 
 #include <cstddef>
 
@@ -23,7 +23,7 @@ void View::Update(char *tiles) {
   tiles_ = tiles;
 }
 
-char View::GetTile(const Position &position) {
+char View::GetTile(const Position &position) const {
   return tiles_[position.y() * width_ + position.x()];
 }
 

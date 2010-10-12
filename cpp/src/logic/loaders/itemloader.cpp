@@ -31,7 +31,7 @@ Item *ItemLoader::GetItem(const std::string &name) const {
   try {
     const boost::property_tree::ptree &database_item = 
       root_.get_child(name);
-
+  
     switch (database_item.get<char>("type")) {
       case 'w': {
         item = new Weapon(name, 
@@ -49,7 +49,7 @@ Item *ItemLoader::GetItem(const std::string &name) const {
     }
   }
   catch(boost::property_tree::ptree_error &exception) {
-    throw MalformedData("Specified item does not match database.");
+    throw MalformedData("Item \"" + name + "\" does not match database.");
   }
   return item;
 }

@@ -1,15 +1,15 @@
-#include "server/server.h"
+#include "server/world.h"
 
 #include <iostream>
 
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {
-  impdungeon::Server server(50000);
+  impdungeon::World world("box", "items.json", "entities.json") ;
   
   try {
-    server.Init();
-    server.Run();
+    world.Init();
+    world.Run();
   }
   catch (impdungeon::NetworkError &network_error) {
     std::cout << "Server quit with the following message: "

@@ -5,17 +5,18 @@
 #include <stdint.h>
 
 #include "logic/network/events/eventcodec.h"
-#include "logic/world.h"
 
 namespace impdungeon {
 
+class EventHandlerInterface;
+
 class Server {
  public:
-  Server(uint16_t port);
+  Server(uint16_t port, EventHandlerInterface &event_handler);
   ~Server();
 
   void Init();
-  void Run();
+  void Listen();
 
  private:
   int listen_socket_;
@@ -23,7 +24,7 @@ class Server {
   struct sockaddr_in server_address_;
 
   EventCodec event_codec_;
-  World world_;
+  EventHandlerInterface &event_handler_;
 };
 
 }  // namespace impdungeon

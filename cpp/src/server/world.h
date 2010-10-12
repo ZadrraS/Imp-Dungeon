@@ -49,6 +49,8 @@ class World : public EventVisitorInterface,
   void Visit(UseEvent &use_event);
 
  private:
+  Server server_;
+
   Map *map_;
   boost::unordered_map<boost::uuids::uuid, Position> entities_;
   boost::unordered_map<boost::uuids::uuid, Position> items_;

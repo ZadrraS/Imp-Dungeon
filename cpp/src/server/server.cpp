@@ -1,26 +1,19 @@
 #include "server/server.h"
 
-#include "logic/network/events/eventcodec.h"
-
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
-
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_io.hpp>
-
-#include "logic/map/attributes/position.h"
-#include "logic/network/events/moveevent.h"
-#include "logic/network/networkerror.h"
-
 #include <iostream>
+#include <cstring>
+
+#include "logic/network/networkerror.h"
+#include "logic/network/events/eventhandlerinterface.h"
 
 namespace impdungeon {
 
-Server::Server(uint16_t port)
-  : listen_socket_(-1), world_("box", "items.json", "entities.json") {
+Server::Server(uint16_t port, EventHandlerInterface &event_handler)
+  : listen_socket_(-1),
+    event_handler_(event_handler) {
   memset(&server_address_, 0, sizeof(server_address_));
 
   server_address_.sin_family = AF_INET;
@@ -41,7 +34,7 @@ void Server::Init() {
     throw NetworkError("Error binding listening socket.");
 }
 
-void Server::Run() {
+void Server::Listen() {
   if (listen_socket_ == -1)
     throw NetworkError("Server not initialized.");
 
@@ -54,21 +47,20 @@ void Server::Run() {
   memset(&client_address, 0, sizeof(client_address));
 
   socklen_t client_address_length = sizeof(struct sockaddr);
-  while (true) {
-    memset(&buffer, 0, sizeof(buffer));
-    client_socket = accept(listen_socket_, (struct sockaddr *)&client_address, 
-                           &client_address_length);
-    int r_len = recv(client_socket, buffer, sizeof(buffer), 0);
-    std::cout << "Client: " << inet_ntoa(client_address.sin_addr) 
-              << " Received: " << r_len << " bytes." << std::endl;;
+  
+  memset(&buffer, 0, sizeof(buffer));
+  client_socket = accept(listen_socket_, (struct sockaddr *)&client_address, 
+                         &client_address_length);
+  int r_len = recv(client_socket, buffer, sizeof(buffer), 0);
+  std::cout << "Client: " << inet_ntoa(client_address.sin_addr) 
+            << " Received: " << r_len << " bytes." << std::endl;
 
-    Event *event = event_codec_.Decode(buffer);
-    if (event != NULL) {
-      world_.PushEvent(event);
-      world_.Run(); 
-    }
-    close(client_socket);
+  Event *event = event_codec_.Decode(buffer);
+  if (event != NULL) {
+    event_handler_.PushEvent(event);
   }
+  
+  close(client_socket);
 }
 
 }  // namespace impdungeon

@@ -1,4 +1,4 @@
-#include "logic/world.h"
+#include "server/world.h"
 
 #include <fstream>
 
@@ -32,7 +32,7 @@ namespace impdungeon {
 
 World::World(const std::string &map_file_name, 
              const std::string &entity_file_name,
-             const std::string &item_file_name) : map_(NULL) {
+             const std::string &item_file_name) : server_(50000, *this), map_(NULL) {
   item_loader_ = new ItemLoader(item_file_name);
   entity_loader_ = new EntityLoader(entity_file_name, *item_loader_);
   map_loader_ = new MapLoader(map_file_name + ".txt", map_file_name + ".json", 
@@ -60,6 +60,8 @@ void World::Init() {
   entity_loader_->Init();
   map_loader_->Init();
 
+  server_.Init();
+
   // TODO(ZadrraS): Possibly move all item loading logic somewhere else.
   map_ = map_loader_->GetMap();
   std::vector<ObjectData> object_data = map_loader_->GetItems();
@@ -69,7 +71,7 @@ void World::Init() {
     items_[item_id] = object.position;    
   } 
 
-  // TODO(ZadrraS): Move all entity loading logic somewhere else.
+  // TODO(ZadrraS): Possibly move all entity loading logic somewhere else.
   Position position(entity_loader_->GetPosition("ZadrraS"));
   Entity *entity = new Entity("ZadrraS", entity_loader_->GetHealth("ZadrraS"));
 
@@ -84,6 +86,7 @@ void World::Init() {
 }
 
 void World::Run() {
+  server_.Listen();
   while (!events_.empty()) {
     Event *event = events_.front();
     event->Accept(*this);

@@ -1,0 +1,14 @@
+#ifndef IMPDUNGEON_LOGIC_NETWORK_MESSAGES_MESSAGEVISITORINTERFACE_H_
+#define IMPDUNGEON_LOGIC_NETWORK_MESSAGES_MESSAGEVISITORINTERFACE_H_
+
+namespace impdungeon {
+
+class MessageVisitorInterface {
+ public:
+  
+};
+
+}  // namespace impdungeon
+
+#endif  // IMPDUNGEON_LOGIC_NETWORK_MESSAGES_MESSAGEVISITORINTERFACE_H_
+

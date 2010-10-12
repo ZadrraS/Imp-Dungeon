@@ -3,9 +3,17 @@
 
 namespace impdungeon {
 
+class OkMessage;
+class ErrorMessage;
+class EntityDataMessage;
+class ItemDataMessage;
+
 class MessageVisitorInterface {
  public:
-  
+  virtual void Visit(OkMessage &ok_message) = 0;
+  virtual void Visit(ErrorMessage &error_message) = 0;
+  virtual void Visit(EntityDataMessage &entity_data_message) = 0;
+  virtual void Visit(ItemDataMessage &item_data_message) = 0;
 };
 
 }  // namespace impdungeon

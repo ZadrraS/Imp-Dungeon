@@ -1,13 +1,17 @@
 #ifndef IMPDUNGEON_LOGIC_NETWORK_MESSAGES_VIEWUPDATEMESSAGE_H_
 #define IMPDUNGEON_LOGIC_NETWORK_MESSAGES_VIEWUPDATEMESSAGE_H_
 
+#include "logic/network/messages/message.h"
+
+#include "logic/network/messages/messagevisitorinterface.h"
+
 namespace impdungeon {
 
 class MessageVisitorInterface;
 
 class View;
 
-class ViewUpdateMessage {
+class ViewUpdateMessage : public Message {
  public:
   ViewUpdateMessage(View *view);
   virtual ~ViewUpdateMessage();

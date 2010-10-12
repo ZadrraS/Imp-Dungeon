@@ -12,7 +12,7 @@ ViewUpdateMessage::~ViewUpdateMessage() {
 
 }
 
-void Accept(MessageVisitorInterface &message_visitor) {
+void ViewUpdateMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 

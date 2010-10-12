@@ -12,7 +12,7 @@ OkMessage::~OkMessage() {
 
 }
 
-void OkMessage::Acccept(MessageVisitorInterface &message_visitor) {
+void OkMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 

@@ -12,7 +12,7 @@ class ErrorMessage : public Message {
   explicit ErrorMessage(const std::string &error);
   virtual ~ErrorMessage();
 
-  void Acccept(MessageVisitorInterface &message_visitor);
+  void Accept(MessageVisitorInterface &message_visitor);
 
   std::string error() const;
 

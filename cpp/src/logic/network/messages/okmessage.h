@@ -10,7 +10,7 @@ class OkMessage : public Message {
   OkMessage();
   virtual ~OkMessage();
 
-  void Acccept(MessageVisitorInterface &message_visitor);
+  void Accept(MessageVisitorInterface &message_visitor);
 };
 
 }  // namespace impdungeon

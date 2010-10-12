@@ -12,7 +12,7 @@ ErrorMessage::~ErrorMessage() {
 
 }
 
-void ErrorMessage::Acccept(MessageVisitorInterface &message_visitor) {
+void ErrorMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 

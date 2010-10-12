@@ -12,9 +12,6 @@
 #include "logic/network/networkerror.h"
 
 namespace impdungeon {
-  std::string ip_;
-  uint16_t port_;
-  
 
 Client::Client(const std::string &ip, uint16_t port) : socket_(-1) {
   memset(&server_address_, 0, sizeof(server_address_));

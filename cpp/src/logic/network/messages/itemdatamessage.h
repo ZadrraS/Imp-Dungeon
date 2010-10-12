@@ -9,7 +9,7 @@ class Item;
 
 class ItemDataMessage : public Message {
  public:
-  ItemDataMessage(Entity *entity);
+  ItemDataMessage(Item *item);
   virtual ~ItemDataMessage();
 
   void Acccept(MessageVisitorInterface &message_visitor);

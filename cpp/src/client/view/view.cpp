@@ -1,5 +1,9 @@
 #include "client/view/view.h"
 
+#include <cstddef>
+
+#include "logic/map/attributes/position.h"
+
 namespace impdungeon {
 
 View::View(char *tiles, int width, int height)

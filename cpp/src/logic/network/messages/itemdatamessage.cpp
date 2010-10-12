@@ -4,7 +4,7 @@
 
 namespace impdungeon {
 
-ItemDataMessage::ItemDataMessage(Entity *entity) : entity_(entity) {
+ItemDataMessage::ItemDataMessage(Item *item) : item_(item) {
 
 }
 

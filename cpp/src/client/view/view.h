@@ -3,6 +3,8 @@
 
 namespace impdungeon {
 
+class Position;
+
 class View {
  public:
   View(char *tiles, int width, int height);

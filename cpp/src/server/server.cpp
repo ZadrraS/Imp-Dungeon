@@ -41,7 +41,7 @@ void Server::Listen() {
   if (listen(listen_socket_, 5) != 0)
     throw NetworkError("Error while trying to listen().");
 
-  char buffer[EventCodec::kCodeSize];
+  char buffer[Serializer::kMaxEventSize];
   int client_socket;
   struct sockaddr_in client_address;
   memset(&client_address, 0, sizeof(client_address));
@@ -55,7 +55,7 @@ void Server::Listen() {
   std::cout << "Client: " << inet_ntoa(client_address.sin_addr) 
             << " Received: " << r_len << " bytes." << std::endl;
 
-  Event *event = event_codec_.Decode(buffer);
+  Event *event = serializer_.UnserializeEvent(buffer);
   if (event != NULL) {
     event_handler_.PushEvent(event);
   }

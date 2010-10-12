@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <stdint.h>
 
-#include "logic/network/events/eventcodec.h"
+#include "logic/network/serializer.h"
 
 namespace impdungeon {
 
@@ -23,7 +23,7 @@ class Server {
 
   struct sockaddr_in server_address_;
 
-  EventCodec event_codec_;
+  Serializer serializer_;
   EventHandlerInterface &event_handler_;
 };
 

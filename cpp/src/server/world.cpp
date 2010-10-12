@@ -32,7 +32,10 @@ namespace impdungeon {
 
 World::World(const std::string &map_file_name, 
              const std::string &entity_file_name,
-             const std::string &item_file_name) : server_(50000, *this), map_(NULL) {
+             const std::string &item_file_name) 
+  : server_(50000, *this), 
+    map_(NULL),
+    running_(false) {
   item_loader_ = new ItemLoader(item_file_name);
   entity_loader_ = new EntityLoader(entity_file_name, *item_loader_);
   map_loader_ = new MapLoader(map_file_name + ".txt", map_file_name + ".json", 
@@ -50,9 +53,9 @@ World::~World() {
   if (entity_loader_ != NULL)
     delete entity_loader_;
   if (map_loader_ != NULL)
-   delete map_loader_;
+    delete map_loader_;
   if (item_loader_ != NULL)
-   delete item_loader_;
+    delete item_loader_;
 }
 
 void World::Init() {
@@ -86,11 +89,14 @@ void World::Init() {
 }
 
 void World::Run() {
-  server_.Listen();
-  while (!events_.empty()) {
-    Event *event = events_.front();
-    event->Accept(*this);
-    events_.pop();
+  running_ = true;
+  while (running_) {
+    server_.Listen();
+    while (!events_.empty()) {
+      Event *event = events_.front();
+      event->Accept(*this);
+      events_.pop();
+    }
   }
 }
 

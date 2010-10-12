@@ -14,6 +14,7 @@ class View {
 
   char GetTile(const Position &position) const;
 
+  const char *tiles() const;
   int width() const;
   int height() const;
 

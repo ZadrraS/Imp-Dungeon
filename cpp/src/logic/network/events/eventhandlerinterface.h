@@ -3,6 +3,8 @@
 
 namespace impdungeon {
 
+class Event;
+
 class EventHandlerInterface {
  public:
   virtual void PushEvent(Event *event) = 0;

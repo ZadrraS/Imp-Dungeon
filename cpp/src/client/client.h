@@ -4,9 +4,11 @@
 #include <netinet/in.h>
 #include <stdint.h>
 
-#include "logic/network/events/eventcodec.h"
+#include "logic/network/serializer.h"
 
 namespace impdungeon {
+
+class Event;
 
 class Client {
  public:
@@ -15,12 +17,13 @@ class Client {
 
   void Init();
   void Run();
+  void SendEvent(Event &event);
 
  private:
   struct sockaddr_in server_address_;
   int socket_;
 
-  EventCodec event_codec_;
+  Serializer serializer_;
 };
 
 }  // namespace impdungeon

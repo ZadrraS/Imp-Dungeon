@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "logic/network/events/loginevent.h"
+#include "logic/network/events/event.h"
 #include "logic/network/networkerror.h"
 
 namespace impdungeon {
@@ -40,12 +40,16 @@ void Client::Run() {
   if (connect(socket_, (struct sockaddr*)&server_address_, 
               sizeof(server_address_)) == -1)
     throw NetworkError("Error connecting to host.");
-  
-  LoginEvent login_event("VartotojasVartotojauskas", "slaptasslaptazodis");
-  if (send(socket_, event_codec_.Encode(login_event), EventCodec::kCodeSize, 0) == -1)
-    throw NetworkError("Error sending package.");
+
+  // STUFF
 
   close(socket_);
+}
+
+void Client::SendEvent(Event &event) {
+  char *data = serializer_.SerializeEvent(event);
+  if (send(socket_, data, Serializer::kMaxEventSize, 0) == -1)
+    throw NetworkError("Error sending package.");
 }
 
 }  // namespace impdungeon

@@ -64,6 +64,8 @@ class World : public EventVisitorInterface,
 
   std::queue <Event *> events_;
 
+  bool running_;
+
 };
 
 }  // namespace impdungeon

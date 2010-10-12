@@ -27,6 +27,10 @@ char View::GetTile(const Position &position) const {
   return tiles_[position.y() * width_ + position.x()];
 }
 
+const char *View::tiles() const {
+  return tiles_;
+}
+
 int View::width() const {
   return width_;
 }

@@ -23,6 +23,8 @@
 #include "logic/network/messages/viewupdatemessage.h"
 
 #include "logic/map/view.h"
+#include "logic/map/entity.h"
+#include "logic/map/attributes/boundedattribute.h"
 
 namespace impdungeon {
 
@@ -136,6 +138,19 @@ Message *Serializer::UnserializeMessage(char *data) {
       std::string msg = ExtractString(data, offset);
 
       message = new ErrorMessage(msg);
+      break;
+    }
+    case kEntityDataMessage: {
+      boost::uuids::uuid source = ExtractUuid(data, offset);
+      std::string name = ExtractString(data, offset);
+      int health_value = ExtractInt(data, offset);
+      int health_bound = ExtractInt(data, offset);
+      BoundedAttribute health(health_value, health_bound);
+
+      Entity *entity = new Entity(name, health);
+      entity->AssignId(source);
+
+      message = new EntityDataMessage(entity);
       break;
     }
     case kViewUpdateMessage: {
@@ -268,8 +283,12 @@ void Serializer::Visit(EntityDataMessage &entity_data_message) {
   memset(storage_, 0, kMaxMessageSize);
   size_t offset = 0;
 
+  Entity *entity = entity_data_message.entity();
   InsertMessageType(kEntityDataMessage, storage_, offset);
-  
+  InsertUuid(entity->id(), storage_, offset);
+  InsertString(entity->name(), storage_, offset);
+  InsertInt(entity->health().value(), storage_, offset);
+  InsertInt(entity->health().bound(), storage_, offset);
   // TODO(ZadrraS): Finish entity data message serialization.
 }
 

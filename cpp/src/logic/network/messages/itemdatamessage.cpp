@@ -12,7 +12,7 @@ ItemDataMessage::~ItemDataMessage() {
 
 }
 
-void ItemDataMessage::Acccept(MessageVisitorInterface &message_visitor) {
+void ItemDataMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 

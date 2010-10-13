@@ -12,7 +12,7 @@ class ItemDataMessage : public Message {
   ItemDataMessage(Item *item);
   virtual ~ItemDataMessage();
 
-  void Acccept(MessageVisitorInterface &message_visitor);
+  void Accept(MessageVisitorInterface &message_visitor);
 
   Item *item();
 

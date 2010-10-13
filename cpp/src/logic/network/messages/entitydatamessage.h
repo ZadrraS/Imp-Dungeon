@@ -12,7 +12,7 @@ class EntityDataMessage : public Message {
   EntityDataMessage(Entity *entity);
   virtual ~EntityDataMessage();
 
-  void Acccept(MessageVisitorInterface &message_visitor);
+  void Accept(MessageVisitorInterface &message_visitor);
 
   Entity *entity();
 

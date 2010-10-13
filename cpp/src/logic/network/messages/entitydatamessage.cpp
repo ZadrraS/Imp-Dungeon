@@ -13,7 +13,7 @@ EntityDataMessage::~EntityDataMessage() {
 
 }
 
-void EntityDataMessage::Acccept(MessageVisitorInterface &message_visitor) {
+void EntityDataMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 

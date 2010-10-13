@@ -9,6 +9,7 @@
 namespace impdungeon {
 
 class EventHandlerInterface;
+class Message;
 
 namespace server {
 
@@ -18,10 +19,15 @@ class Server {
   ~Server();
 
   void Init();
+  void Disconnect();
+
+  void SendMessage(Message &message);
   void Listen();
+  
 
  private:
   int listen_socket_;
+  int client_socket_;
 
   struct sockaddr_in server_address_;
 

@@ -7,6 +7,8 @@
 
 namespace impdungeon {
 
+class View;
+
 enum Tile {
   kNonTile,
   kGround,
@@ -24,6 +26,7 @@ class Map {
 
   bool IsPassable(const Position &position) const;
   Tile GetTile(const Position &position) const;
+  View *GetView(const Position &position, int width, int height) const;
 
   int width();
   int height();

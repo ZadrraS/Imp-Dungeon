@@ -51,6 +51,8 @@ void Client::SendEvent(Event &event) {
   char *data = serializer_.SerializeEvent(event);
   if (send(socket_, data, Serializer::kMaxEventSize, 0) == -1)
     throw NetworkError("Error sending package.");
+
+  delete [] data;
 }
 
 Message *Client::Listen() {

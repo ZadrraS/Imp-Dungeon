@@ -6,7 +6,7 @@ INCLDS=-I.
 SOURCES:=$(wildcard logic/*.cpp logic/loaders/*.cpp logic/map/*.cpp \
                     logic/map/attributes/*.cpp logic/map/items/*.cpp \
                     logic/network/*.cpp logic/network/events/*.cpp \
-                    logic/network/messages/*.cpp client/view/*.cpp)
+                    logic/network/messages/*.cpp)
 SSOURCES:=$(wildcard server/*.cpp)
 CSOURCES:=$(wildcard client/*.cpp)
 

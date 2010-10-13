@@ -27,6 +27,9 @@
 #include "logic/network/events/moveevent.h"
 #include "logic/network/events/viewupdateevent.h"
 
+#include "logic/network/messages/viewupdatemessage.h"
+#include "logic/map/view.h"
+
 #include <iostream>
 
 namespace impdungeon {
@@ -146,7 +149,10 @@ void World::Visit(UseEvent &use_event) {
 }
 
 void World::Visit(ViewUpdateEvent &view_update_event) {
-
+  View *view = map_->GetView(entities_[view_update_event.source()], 20, 10);
+  ViewUpdateMessage view_update_message(view);
+  server_.SendMessage(view_update_message);
+  delete view;
 }
 
 }  // namespace server

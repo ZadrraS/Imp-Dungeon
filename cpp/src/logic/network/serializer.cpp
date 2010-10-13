@@ -254,7 +254,7 @@ void Serializer::Visit(ViewUpdateEvent &view_update_event) {
   size_t offset = 0;
 
   InsertEventType(kViewUpdateEvent, storage_, offset);
-  InsertUuid(view_update_event.id(), storage_, offset);
+  InsertUuid(view_update_event.source(), storage_, offset);
   InsertInt(view_update_event.width(), storage_, offset);
   InsertInt(view_update_event.height(), storage_, offset);
 }

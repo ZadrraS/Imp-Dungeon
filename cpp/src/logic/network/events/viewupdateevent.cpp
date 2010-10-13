@@ -18,11 +18,11 @@ void ViewUpdateEvent::Accept(EventVisitorInterface &event_visitor) {
   event_visitor.Visit(*this);
 }
 
-int width() const {
+int ViewUpdateEvent::width() const {
   return width_;
 }
 
-int height() const {
+int ViewUpdateEvent::height() const {
   return height_;
 }
 

@@ -8,6 +8,7 @@
 
 #include "logic/network/networkerror.h"
 #include "logic/network/events/eventhandlerinterface.h"
+#include "logic/network/messages/message.h"
 
 namespace impdungeon {
 namespace server {
@@ -35,6 +36,17 @@ void Server::Init() {
     throw NetworkError("Error binding listening socket.");
 }
 
+void Server::Disconnect() {
+  close(client_socket_);
+}
+
+void Server::SendMessage(Message &message) {
+  char *data = serializer_.SerializeMessage(message);
+  if (send(client_socket_, data, Serializer::kMaxMessageSize, 0) == -1)
+    throw NetworkError("Error sending package.");
+  delete [] data;
+}
+
 void Server::Listen() {
   if (listen_socket_ == -1)
     throw NetworkError("Server not initialized.");
@@ -43,16 +55,15 @@ void Server::Listen() {
     throw NetworkError("Error while trying to listen().");
 
   char buffer[Serializer::kMaxEventSize];
-  int client_socket;
   struct sockaddr_in client_address;
   memset(&client_address, 0, sizeof(client_address));
 
   socklen_t client_address_length = sizeof(struct sockaddr);
   
   memset(&buffer, 0, sizeof(buffer));
-  client_socket = accept(listen_socket_, (struct sockaddr *)&client_address, 
+  client_socket_ = accept(listen_socket_, (struct sockaddr *)&client_address, 
                          &client_address_length);
-  int r_len = recv(client_socket, buffer, sizeof(buffer), 0);
+  int r_len = recv(client_socket_, buffer, sizeof(buffer), 0);
   std::cout << "Client: " << inet_ntoa(client_address.sin_addr) 
             << " Received: " << r_len << " bytes." << std::endl;
 
@@ -60,8 +71,6 @@ void Server::Listen() {
   if (event != NULL) {
     event_handler_.PushEvent(event);
   }
-  
-  close(client_socket);
 }
 
 }  // namespace server

@@ -16,5 +16,9 @@ void ItemDataMessage::Acccept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 
+Item *ItemDataMessage::item() {
+  return item_;
+}
+
 }  // namespace impdungeon
 

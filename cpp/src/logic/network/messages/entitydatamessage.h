@@ -14,6 +14,8 @@ class EntityDataMessage : public Message {
 
   void Acccept(MessageVisitorInterface &message_visitor);
 
+  Entity *entity();
+
  private:
   Entity *entity_;
 };

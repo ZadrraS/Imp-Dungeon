@@ -14,6 +14,8 @@ class ItemDataMessage : public Message {
 
   void Acccept(MessageVisitorInterface &message_visitor);
 
+  Item *item();
+
  private:
   Item *item_;
 };

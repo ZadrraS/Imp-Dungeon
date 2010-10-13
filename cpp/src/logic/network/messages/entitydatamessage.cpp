@@ -17,5 +17,9 @@ void EntityDataMessage::Acccept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 
+Entity *EntityDataMessage::entity() {
+  return entity_;
+}
+
 }  // namespace impdungeon
 

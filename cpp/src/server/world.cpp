@@ -25,6 +25,7 @@
 #include "logic/network/events/equipevent.h"
 #include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
+#include "logic/network/events/viewupdateevent.h"
 
 #include <iostream>
 
@@ -141,6 +142,10 @@ void World::Visit(EquipEvent &equip_event) {
 }
 
 void World::Visit(UseEvent &use_event) {
+
+}
+
+void World::Visit(ViewUpdateEvent &view_update_event) {
 
 }
 

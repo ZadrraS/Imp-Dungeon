@@ -14,6 +14,7 @@
 #include "logic/network/events/equipevent.h"
 #include "logic/network/events/useevent.h"
 #include "logic/network/events/moveevent.h"
+#include "logic/network/events/viewupdateevent.h"
 
 #include "logic/network/messages/message.h"
 #include "logic/network/messages/okmessage.h"
@@ -102,6 +103,12 @@ Event *Serializer::UnserializeEvent(char *data) {
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
       event = new AttackEvent(source, target);
+      break;
+    }
+    case kViewUpdateEvent: {
+      boost::uuids::uuid source = ExtractUuid(data, offset);
+
+      event = new ViewUpdateEvent(source);
       break;
     }
     default: {
@@ -238,6 +245,14 @@ void Serializer::Visit(UseEvent &use_event) {
   InsertEventType(kUseEvent, storage_, offset);
   InsertUuid(use_event.source(), storage_, offset);
   InsertUuid(use_event.target(), storage_, offset);
+}
+
+void Serializer::Visit(ViewUpdateEvent &view_update_event) {
+  storage_ = new char [kMaxEventSize];
+  memset(storage_, 0, kMaxEventSize);
+  size_t offset = 0;
+
+  InsertEventType(kViewUpdateEvent, storage_, offset);
 }
 
 void Serializer::Visit(OkMessage &ok_message) {

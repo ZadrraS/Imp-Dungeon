@@ -39,7 +39,8 @@ class Serializer : public EventVisitorInterface,
     kTakeEvent,
     kDropEvent,
     kEquipEvent,
-    kUseEvent
+    kUseEvent,
+    kViewUpdateEvent
   };
 
   enum MessageType {
@@ -60,6 +61,7 @@ class Serializer : public EventVisitorInterface,
   void Visit(DropEvent &drop_event);
   void Visit(EquipEvent &equip_event);
   void Visit(UseEvent &use_event);
+  void Visit(ViewUpdateEvent &view_update_event);
 
   // Inherited from MessageVisitorInterface
   void Visit(OkMessage &ok_message);

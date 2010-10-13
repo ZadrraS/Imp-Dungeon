@@ -49,6 +49,7 @@ class World : public EventVisitorInterface,
   void Visit(DropEvent &drop_event);
   void Visit(EquipEvent &equip_event);
   void Visit(UseEvent &use_event);
+  void Visit(ViewUpdateEvent &view_update_event);
 
  private:
   Server server_;

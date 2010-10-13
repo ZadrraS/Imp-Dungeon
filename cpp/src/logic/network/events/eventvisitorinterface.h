@@ -11,6 +11,7 @@ class TakeEvent;
 class DropEvent;
 class EquipEvent;
 class UseEvent;
+class ViewUpdateEvent;
 
 class EventVisitorInterface {
  public:
@@ -22,6 +23,7 @@ class EventVisitorInterface {
   virtual void Visit(DropEvent &drop_event) = 0;
   virtual void Visit(EquipEvent &equip_event) = 0;
   virtual void Visit(UseEvent &use_event) = 0;
+  virtual void Visit(ViewUpdateEvent &view_update_event) = 0;
 };
 
 }  // namespace events

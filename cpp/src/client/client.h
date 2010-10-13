@@ -16,8 +16,11 @@ class Client {
   virtual ~Client();
 
   void Init();
-  void Run();
+  void Connect();
+  void Disconnect();
+
   void SendEvent(Event &event);
+  Message *Listen();
 
  private:
   struct sockaddr_in server_address_;

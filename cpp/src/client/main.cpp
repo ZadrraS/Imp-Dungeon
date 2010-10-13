@@ -1,4 +1,4 @@
-#include "client/client.h"
+#include "client/world.h"
 
 #include <iostream>
 
@@ -6,10 +6,10 @@
 
 int main(int argc, char *argv[]) {
   try {
-    impdungeon::Client client("127.0.0.1", 50000);
+    impdungeon::client::World world("127.0.0.1", 50000);
     
-    client.Init();
-    client.Run();
+    world.Init();
+    world.Run();
   }
   catch (impdungeon::NetworkError &network_error) {
     std::cout << "Client quit with the following message: "

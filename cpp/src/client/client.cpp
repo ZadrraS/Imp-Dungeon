@@ -33,16 +33,16 @@ void Client::Init() {
     throw NetworkError("Error creating socket.");
 }
 
-void Client::Run() {
+void Client::Connect() {
   if (socket_ == -1)
     throw NetworkError("Client not initialized.");
 
   if (connect(socket_, (struct sockaddr*)&server_address_, 
               sizeof(server_address_)) == -1)
     throw NetworkError("Error connecting to host.");
+}
 
-  // STUFF
-
+void Client::Disconnect() {
   close(socket_);
 }
 
@@ -50,6 +50,14 @@ void Client::SendEvent(Event &event) {
   char *data = serializer_.SerializeEvent(event);
   if (send(socket_, data, Serializer::kMaxEventSize, 0) == -1)
     throw NetworkError("Error sending package.");
+}
+
+Message *Client::Listen() {
+  char buffer[Serializer::kMaxMessageSize];
+  if (recv(socket_, buffer, sizeof(buffer), 0) == -1)
+    throw NetworkError("Error receiving package.");
+  Message *message = serializer_.UnserializeMessage(buffer);
+  return message;
 }
 
 }  // namespace impdungeon

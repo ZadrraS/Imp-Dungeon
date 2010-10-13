@@ -12,6 +12,7 @@
 #include "logic/network/networkerror.h"
 
 namespace impdungeon {
+namespace client {
 
 Client::Client(const std::string &ip, uint16_t port) : socket_(-1) {
   memset(&server_address_, 0, sizeof(server_address_));
@@ -60,5 +61,6 @@ Message *Client::Listen() {
   return message;
 }
 
+}  // namespace client
 }  // namespace impdungeon
 

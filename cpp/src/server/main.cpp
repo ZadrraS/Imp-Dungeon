@@ -5,7 +5,7 @@
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {
-  impdungeon::World world("box", "entities.json", "items.json") ;
+  impdungeon::server::World world("box", "entities.json", "items.json") ;
   
   try {
     world.Init();

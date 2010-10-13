@@ -21,6 +21,8 @@ class EntityLoader;
 class MapLoader;
 class ItemLoader;
 
+namespace server {
+
 /*-------------------
 * World manages received events and ties together most of the games subsystems.
 ---------------------*/
@@ -68,6 +70,7 @@ class World : public EventVisitorInterface,
 
 };
 
+}  // namespace server
 }  // namespace impdungeon
 
 #endif  // IMPDUNGEON_LOGIC_WORLD_H_

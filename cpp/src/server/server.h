@@ -10,6 +10,8 @@ namespace impdungeon {
 
 class EventHandlerInterface;
 
+namespace server {
+
 class Server {
  public:
   Server(uint16_t port, EventHandlerInterface &event_handler);
@@ -27,6 +29,7 @@ class Server {
   EventHandlerInterface &event_handler_;
 };
 
+}  // namespace server
 }  // namespace impdungeon
 
 #endif  // IMPDUNGEON_SERVER_SERVER_H_

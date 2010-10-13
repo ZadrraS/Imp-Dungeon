@@ -10,6 +10,7 @@
 #include "logic/network/events/eventhandlerinterface.h"
 
 namespace impdungeon {
+namespace server {
 
 Server::Server(uint16_t port, EventHandlerInterface &event_handler)
   : listen_socket_(-1),
@@ -63,5 +64,6 @@ void Server::Listen() {
   close(client_socket);
 }
 
+}  // namespace server
 }  // namespace impdungeon
 

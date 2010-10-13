@@ -10,6 +10,8 @@ namespace impdungeon {
 
 class Event;
 
+namespace client {
+
 class Client {
  public:
   Client(const std::string &ip, uint16_t port);
@@ -29,6 +31,7 @@ class Client {
   Serializer serializer_;
 };
 
+}  // namespace client
 }  // namespace impdungeon
 
 #endif  // IMPDUNGEON_CLIENT_CLIENT_H_

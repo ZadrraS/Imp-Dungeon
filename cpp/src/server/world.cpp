@@ -29,6 +29,7 @@
 #include <iostream>
 
 namespace impdungeon {
+namespace server {
 
 World::World(const std::string &map_file_name, 
              const std::string &entity_file_name,
@@ -143,5 +144,6 @@ void World::Visit(UseEvent &use_event) {
 
 }
 
+}  // namespace server
 }  // namespace impdungeon
 

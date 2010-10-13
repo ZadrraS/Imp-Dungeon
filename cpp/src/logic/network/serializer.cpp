@@ -107,8 +107,9 @@ Event *Serializer::UnserializeEvent(char *data) {
     }
     case kViewUpdateEvent: {
       boost::uuids::uuid source = ExtractUuid(data, offset);
-
-      event = new ViewUpdateEvent(source);
+      int width = ExtractInt(data, offset);
+      int height = ExtractInt(data, offset);
+      event = new ViewUpdateEvent(source, width, height);
       break;
     }
     default: {
@@ -253,6 +254,9 @@ void Serializer::Visit(ViewUpdateEvent &view_update_event) {
   size_t offset = 0;
 
   InsertEventType(kViewUpdateEvent, storage_, offset);
+  InsertUuid(view_update_event.id(), storage_, offset);
+  InsertInt(view_update_event.width(), storage_, offset);
+  InsertInt(view_update_event.height(), storage_, offset);
 }
 
 void Serializer::Visit(OkMessage &ok_message) {
@@ -296,6 +300,8 @@ void Serializer::Visit(ViewUpdateMessage &view_update_message) {
   size_t offset = 0;
 
   InsertMessageType(kViewUpdateMessage, storage_, offset);
+  InsertInt(view_update_message.view()->width(), storage_, offset);
+  InsertInt(view_update_message.view()->width(), storage_, offset); 
   InsertArray(view_update_message.view()->tiles(), 
               view_update_message.view()->width() * 
               view_update_message.view()->height(), 

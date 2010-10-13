@@ -17,7 +17,6 @@
 #include "logic/network/events/viewupdateevent.h"
 
 #include "logic/network/messages/message.h"
-#include "logic/network/messages/okmessage.h"
 #include "logic/network/messages/errormessage.h"
 #include "logic/network/messages/entitydatamessage.h"
 #include "logic/network/messages/itemdatamessage.h"
@@ -133,14 +132,10 @@ Message *Serializer::UnserializeMessage(char *data) {
   Message *message;
 
   switch (message_type) {
-    case kOkMessage: {
-      message = new OkMessage();
-      break;
-    }
     case kErrorMessage: {
-      std::string error = ExtractString(data, offset);
+      std::string msg = ExtractString(data, offset);
 
-      message = new ErrorMessage(error);
+      message = new ErrorMessage(msg);
       break;
     }
     case kViewUpdateMessage: {
@@ -259,21 +254,13 @@ void Serializer::Visit(ViewUpdateEvent &view_update_event) {
   InsertInt(view_update_event.height(), storage_, offset);
 }
 
-void Serializer::Visit(OkMessage &ok_message) {
-  storage_ = new char [kMaxMessageSize];
-  memset(storage_, 0, kMaxMessageSize);
-  size_t offset = 0;
-
-  InsertMessageType(kOkMessage, storage_, offset);
-}
-
 void Serializer::Visit(ErrorMessage &error_message) {
   storage_ = new char [kMaxMessageSize];
   memset(storage_, 0, kMaxMessageSize);
   size_t offset = 0;
 
   InsertMessageType(kErrorMessage, storage_, offset);
-  InsertString(error_message.error(), storage_, offset);
+  InsertString(error_message.message(), storage_, offset);
 }
 
 void Serializer::Visit(EntityDataMessage &entity_data_message) {
@@ -282,6 +269,7 @@ void Serializer::Visit(EntityDataMessage &entity_data_message) {
   size_t offset = 0;
 
   InsertMessageType(kEntityDataMessage, storage_, offset);
+  
   // TODO(ZadrraS): Finish entity data message serialization.
 }
 

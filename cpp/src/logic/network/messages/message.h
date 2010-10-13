@@ -7,10 +7,15 @@ class MessageVisitorInterface;
 
 class Message {
  public:
-  Message();
+  Message(bool success);
   virtual ~Message();
 
   virtual void Accept(MessageVisitorInterface &message_visitor) = 0;
+
+  bool success() const;
+
+ private:
+  bool success_;
 };
 
 }  // namespace impdungeon

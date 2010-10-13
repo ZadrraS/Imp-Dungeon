@@ -4,7 +4,9 @@
 
 namespace impdungeon {
 
-ErrorMessage::ErrorMessage(const std::string &error) : error_(error) {
+ErrorMessage::ErrorMessage(const std::string &message) 
+  : Message(false),
+    message_(message) {
 
 }
 
@@ -16,8 +18,8 @@ void ErrorMessage::Accept(MessageVisitorInterface &message_visitor) {
   message_visitor.Visit(*this);
 }
 
-std::string ErrorMessage::error() const {
-  return error_;
+std::string ErrorMessage::message() const {
+  return message_;
 }
 
 }  // namespace impdungeon

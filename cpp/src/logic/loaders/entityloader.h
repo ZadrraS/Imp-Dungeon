@@ -22,6 +22,7 @@ class EntityLoader {
 
   void Init();
 
+  bool IsNameRegistered(const std::string &entity_name) const;
   std::string GetPassword(const std::string &entity_name) const;
   std::string GetMap(const std::string &entity_name) const;
   Position GetPosition(const std::string &entity_name) const;    

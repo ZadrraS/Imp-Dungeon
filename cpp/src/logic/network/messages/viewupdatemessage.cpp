@@ -4,7 +4,7 @@
 
 namespace impdungeon {
 
-ViewUpdateMessage::ViewUpdateMessage(View *view) : view_(view) {
+ViewUpdateMessage::ViewUpdateMessage(View *view) : Message(true), view_(view) {
 
 }
 

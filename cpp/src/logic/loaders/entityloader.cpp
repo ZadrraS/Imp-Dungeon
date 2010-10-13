@@ -33,6 +33,13 @@ void EntityLoader::Init() {
   }
 }
 
+bool EntityLoader::IsNameRegistered(const std::string &entity_name) const {
+  if (root_.find(entity_name) == root_.not_found())
+    return false;
+
+  return true;
+}
+
 std::string EntityLoader::GetPassword(const std::string &name) const {
   try {
     return root_.get<std::string>(name + ".password");

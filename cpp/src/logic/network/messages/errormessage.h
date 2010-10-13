@@ -9,15 +9,15 @@ namespace impdungeon {
 
 class ErrorMessage : public Message {
  public:
-  explicit ErrorMessage(const std::string &error);
+  explicit ErrorMessage(const std::string &message);
   virtual ~ErrorMessage();
 
   void Accept(MessageVisitorInterface &message_visitor);
 
-  std::string error() const;
+  std::string message() const;
 
  private:
-  std::string error_;
+  std::string message_;
 };
 
 }  // namespace impdungeon

@@ -45,7 +45,6 @@ class Serializer : public EventVisitorInterface,
 
   enum MessageType {
     kNotAMessage,
-    kOkMessage,
     kErrorMessage,
     kEntityDataMessage,
     kItemDataMessage,
@@ -64,7 +63,6 @@ class Serializer : public EventVisitorInterface,
   void Visit(ViewUpdateEvent &view_update_event);
 
   // Inherited from MessageVisitorInterface
-  void Visit(OkMessage &ok_message);
   void Visit(ErrorMessage &error_message);
   void Visit(EntityDataMessage &entity_data_message);
   void Visit(ItemDataMessage &item_data_message);

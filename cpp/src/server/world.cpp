@@ -27,7 +27,9 @@
 #include "logic/network/events/moveevent.h"
 #include "logic/network/events/viewupdateevent.h"
 
+#include "logic/network/messages/message.h"
 #include "logic/network/messages/viewupdatemessage.h"
+#include "logic/network/messages/errormessage.h"
 #include "logic/map/view.h"
 
 #include <iostream>
@@ -78,19 +80,6 @@ void World::Init() {
     boost::uuids::uuid item_id = item_manager_.SpawnItem(item);
     items_[item_id] = object.position;    
   } 
-
-  // TODO(ZadrraS): Possibly move all entity loading logic somewhere else.
-  Position position(entity_loader_->GetPosition("ZadrraS"));
-  Entity *entity = new Entity("ZadrraS", entity_loader_->GetHealth("ZadrraS"));
-
-  std::vector<Item *> items = entity_loader_->GetItems("ZadrraS");
-  BOOST_FOREACH(Item *item, items) {
-    item_manager_.SpawnItem(item);
-    entity->TakeItem(item);  
-  }
-
-  boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
-  entities_[entity_id] = position;
 }
 
 void World::Run() {
@@ -110,8 +99,28 @@ void World::PushEvent(Event *event) {
 }
 
 void World::Visit(LoginEvent &login_event) {
-  std::cout << "Katik prisijunge " << login_event.user_name() 
-            << " su slaptazodziu " << login_event.password() << "." << std::endl;
+  std::string user = login_event.user_name();
+  if (entity_loader_->IsNameRegistered(user)) {
+    Position position(entity_loader_->GetPosition(user));
+    Entity *entity = new Entity(user, entity_loader_->GetHealth(user));
+
+    std::vector<Item *> items = entity_loader_->GetItems(user);
+    BOOST_FOREACH(Item *item, items) {
+      item_manager_.SpawnItem(item);
+      entity->TakeItem(item);  
+    }
+
+    boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
+    entities_[entity_id] = position;
+
+    std::cout << "Player " << login_event.user_name() 
+              << " has just connected." << std::endl;
+
+  }
+  else {
+    ErrorMessage message("User does not exist.");
+    server_.SendMessage(message);
+  }
 }
 
 void World::Visit(LogoffEvent &logoff_event) {

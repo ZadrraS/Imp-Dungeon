@@ -9,7 +9,9 @@
 #include <unistd.h>
 
 #include "logic/network/events/event.h"
+#include "logic/network/messages/message.h"
 #include "logic/network/networkerror.h"
+#include <iostream>
 
 namespace impdungeon {
 namespace client {
@@ -51,14 +53,13 @@ void Client::SendEvent(Event &event) {
   char *data = serializer_.SerializeEvent(event);
   if (send(socket_, data, Serializer::kMaxEventSize, 0) == -1)
     throw NetworkError("Error sending package.");
-
   delete [] data;
 }
 
 Message *Client::Listen() {
   char buffer[Serializer::kMaxMessageSize];
-  if (recv(socket_, buffer, sizeof(buffer), 0) == -1)
-    throw NetworkError("Error receiving package.");
+  if (recv(socket_, buffer, sizeof(buffer), 0) <= 0)
+    throw NetworkError("Error receiving package.");  
   Message *message = serializer_.UnserializeMessage(buffer);
   return message;
 }

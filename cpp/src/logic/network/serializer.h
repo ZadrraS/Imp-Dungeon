@@ -18,7 +18,7 @@ class Serializer : public EventVisitorInterface,
                    public MessageVisitorInterface {
  public:
   static const int kMaxEventSize = 128;
-  static const int kMaxMessageSize = 1024;
+  static const int kMaxMessageSize = 2048;
 
   Serializer();
   virtual ~Serializer();

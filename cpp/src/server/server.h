@@ -30,6 +30,7 @@ class Server {
   int client_socket_;
 
   struct sockaddr_in server_address_;
+  struct sockaddr_in client_address_;
 
   Serializer serializer_;
   EventHandlerInterface &event_handler_;

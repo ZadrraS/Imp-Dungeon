@@ -5,26 +5,14 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "logic/network/events/event.h"
-#include "logic/network/events/loginevent.h"
-#include "logic/network/events/logoffevent.h"
-#include "logic/network/events/attackevent.h"
-#include "logic/network/events/takeevent.h"
-#include "logic/network/events/dropevent.h"
-#include "logic/network/events/equipevent.h"
-#include "logic/network/events/useevent.h"
-#include "logic/network/events/moveevent.h"
-#include "logic/network/events/viewupdateevent.h"
+#include "logic/network/events/events.h"
 
-#include "logic/network/messages/message.h"
-#include "logic/network/messages/errormessage.h"
-#include "logic/network/messages/entitydatamessage.h"
-#include "logic/network/messages/itemdatamessage.h"
-#include "logic/network/messages/viewupdatemessage.h"
+#include "logic/network/messages/messages.h"
 
 #include "logic/map/view.h"
 #include "logic/map/entity.h"
 #include "logic/map/attributes/boundedattribute.h"
+#include <iostream>
 
 namespace impdungeon {
 
@@ -129,10 +117,8 @@ char *Serializer::SerializeMessage(Message &message) {
 
 Message *Serializer::UnserializeMessage(char *data) {
   size_t offset = 0; 
-  
   MessageType message_type = ExtractMessageType(data, offset);
   Message *message;
-
   switch (message_type) {
     case kErrorMessage: {
       std::string msg = ExtractString(data, offset);
@@ -157,9 +143,9 @@ Message *Serializer::UnserializeMessage(char *data) {
       int width = ExtractInt(data, offset);
       int height = ExtractInt(data, offset);
       char *view_data = ExtractArray(width*height, data, offset);
-      
       View *view = new View(view_data, width, height);
       message = new ViewUpdateMessage(view);
+      break;
     }
     default: {
       message = NULL;
@@ -167,7 +153,6 @@ Message *Serializer::UnserializeMessage(char *data) {
     }
     // TODO(ZadrraS): Code in all other message parsing.
   }
-
   return message;
 }
 
@@ -305,10 +290,9 @@ void Serializer::Visit(ViewUpdateMessage &view_update_message) {
   storage_ = new char [kMaxMessageSize];
   memset(storage_, 0, kMaxMessageSize);
   size_t offset = 0;
-
   InsertMessageType(kViewUpdateMessage, storage_, offset);
   InsertInt(view_update_message.view()->width(), storage_, offset);
-  InsertInt(view_update_message.view()->width(), storage_, offset); 
+  InsertInt(view_update_message.view()->height(), storage_, offset); 
   InsertArray(view_update_message.view()->tiles(), 
               view_update_message.view()->width() * 
               view_update_message.view()->height(), 

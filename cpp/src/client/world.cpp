@@ -52,6 +52,7 @@ void World::Run() {
     delete position;
   }
   
+
   boost::uuids::uuid player_id = player_->id();
   ViewUpdateEvent view_update_event(player_id, 61, 13);
   client_.SendEvent(view_update_event);
@@ -108,14 +109,13 @@ void World::Run() {
 
 void World::Display() {
   typedef boost::unordered_map<boost::uuids::uuid, Position> position_map;
+
   system("clear");
   std::cout << "/";
   for (int x = 0; x < view_->width(); x++)
     std::cout << "=";
   std::cout << "\\" << std::endl;
- 
   for (int y = 0; y < view_->height(); y++) {
-    std::cout << "|";
     for (int x = 0; x < view_->width(); x++) {
       char print_value = view_->GetTile(Position(x, y));
       BOOST_FOREACH(position_map::value_type it, entities_) {
@@ -124,14 +124,8 @@ void World::Display() {
       }
       std::cout << print_value;
     }
-    std::cout << "|";
     std::cout << std::endl;
   }
-
-  std::cout << "\\";
-  for (int x = 0; x < view_->width(); x++)
-    std::cout << "=";
-  std::cout << "/" << std::endl;
 }
 
 }  // namespace client

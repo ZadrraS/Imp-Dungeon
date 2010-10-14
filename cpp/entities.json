@@ -3,8 +3,8 @@
     "password": "slaptazodis",
     "map": "box",
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 30,
+      "y": 10
     },
     "health": {
       "current": 10,

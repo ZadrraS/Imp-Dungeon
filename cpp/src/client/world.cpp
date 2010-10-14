@@ -51,7 +51,6 @@ void World::Run() {
     entities_[player_->id()] = *position;
     delete position;
   }
-  
 
   boost::uuids::uuid player_id = player_->id();
   ViewUpdateEvent view_update_event(player_id, 61, 13);

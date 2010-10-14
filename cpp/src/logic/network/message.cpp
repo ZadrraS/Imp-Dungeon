@@ -64,6 +64,7 @@ Position *Message::ExtractPosition() {
 
     return position;
   }
+  
   return NULL;
 }
 

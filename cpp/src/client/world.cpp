@@ -57,14 +57,20 @@ void World::Run() {
   client_.SendEvent(view_update_event);
   Message view_update_message(client_.Listen());
   view_ = view_update_message.ExtractView();
-  
+
   while (true) {
     Display();
-    ActionType action = input_manager_.GetInput();
+
     Position move(entities_[player_->id()]);
+
+    ActionType action = input_manager_.GetInput();
     switch (action) {
       case kUp: {
         move += Position(0, -1);
+        break;
+      }
+      case kDown: {
+        move += Position(0, 1);
         break;
       }
       case kLeft: {
@@ -73,10 +79,6 @@ void World::Run() {
       }
       case kRight: {
         move += Position(1, 0);
-        break;
-      }
-      case kDown: {
-        move += Position(0, 1);
         break;
       }
       case kLook: {
@@ -90,18 +92,19 @@ void World::Run() {
     }
     MoveEvent move_event(player_id, move);
     client_.SendEvent(move_event);
+    
     Message response(client_.Listen());
     if (response.ExtractSuccess()) {
+      entities_[player_->id()] = move;
+      
       ViewUpdateEvent view_update_event(player_id, 61, 13);
       client_.SendEvent(view_update_event);
       Message view_update_message(client_.Listen());
       view_ = view_update_message.ExtractView();
-      entities_[player_->id()] = move;
     }
     else {
       std::cout << response.ExtractError() << std::endl;
     }
-    
   }
   client_.Disconnect();
 }
@@ -115,6 +118,7 @@ void World::Display() {
     std::cout << "=";
   std::cout << "\\" << std::endl;
   for (int y = 0; y < view_->height(); y++) {
+    std::cout << "|";
     for (int x = 0; x < view_->width(); x++) {
       char print_value = view_->GetTile(Position(x, y));
       BOOST_FOREACH(position_map::value_type it, entities_) {
@@ -123,8 +127,13 @@ void World::Display() {
       }
       std::cout << print_value;
     }
-    std::cout << std::endl;
+    std::cout << "|" << std::endl;
   }
+
+  std::cout << "\\";
+  for (int x = 0; x < view_->width(); x++)
+    std::cout << "=";
+  std::cout << "/" << std::endl;
 }
 
 }  // namespace client

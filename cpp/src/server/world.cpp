@@ -130,19 +130,7 @@ void World::Visit(MoveEvent &move_event) {
     if (map_->IsPassable(move_event.move()) && 
         entity_position.IsNextTo(move_event.move())) {
       entities_[move_event.source()] = move_event.move();
-      Message message(Message::kEmptyMessage);
-      server_.SendMessage(message);
     }
-    else {
-      Message message(Message::kErrorMessage);
-      message.InjectError("Your path is blocked!");
-      server_.SendMessage(message);
-    }
-  }
-  else {
-    Message message(Message::kErrorMessage);
-    message.InjectError("Encountered critical error. Please restart client.");
-    server_.SendMessage(message);
   }
 }
 

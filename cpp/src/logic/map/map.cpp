@@ -15,7 +15,7 @@ Map::~Map() {
 }
 
 bool Map::IsPassable(const Position &position) const {
-  if (GetTile(position) == kGround)
+  if (GetTile(position) != kGround)
     return true;
 
   return false;

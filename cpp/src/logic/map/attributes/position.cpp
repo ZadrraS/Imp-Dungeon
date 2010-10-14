@@ -22,7 +22,7 @@ bool Position::IsNextTo(const Position &position) const {
   Position position_diff = *this - position;
   return (position_diff.x() <= 1 && position_diff.x() >= -1 &&
           position_diff.y() <= 1 && position_diff.y() >= -1 &&
-          (position_diff.x() != 0 || position_diff.y() != 0));
+          position_diff.x() != 0 && position_diff.y() != 0);
 }
 
 void Position::set_x(int x) {

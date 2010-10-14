@@ -18,6 +18,7 @@ class Message {
 
   enum MessageType {
     kInvalidMessage,
+    kEmptyMessage,
     kErrorMessage,
     kEntityDataMessage,
     kItemDataMessage,

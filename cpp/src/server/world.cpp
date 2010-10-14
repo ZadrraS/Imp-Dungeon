@@ -15,21 +15,9 @@
 #include "logic/loaders/maploader.h"
 #include "logic/loaders/itemloader.h"
 
-#include "logic/network/events/event.h"
-#include "logic/network/events/playerevent.h"
-#include "logic/network/events/loginevent.h"
-#include "logic/network/events/logoffevent.h"
-#include "logic/network/events/attackevent.h"
-#include "logic/network/events/takeevent.h"
-#include "logic/network/events/dropevent.h"
-#include "logic/network/events/equipevent.h"
-#include "logic/network/events/useevent.h"
-#include "logic/network/events/moveevent.h"
-#include "logic/network/events/viewupdateevent.h"
+#include "logic/network/events/events.h"
+#include "logic/network/messages/messages.h"
 
-#include "logic/network/messages/message.h"
-#include "logic/network/messages/viewupdatemessage.h"
-#include "logic/network/messages/errormessage.h"
 #include "logic/map/view.h"
 
 #include <iostream>
@@ -88,8 +76,8 @@ void World::Run() {
     server_.Listen();
     while (!events_.empty()) {
       Event *event = events_.front();
-      event->Accept(*this);
       events_.pop();
+      event->Accept(*this);
     }
   }
 }
@@ -116,6 +104,8 @@ void World::Visit(LoginEvent &login_event) {
     std::cout << "Player " << login_event.user_name() 
               << " has just connected." << std::endl;
 
+    EntityDataMessage entity_data_message(entity);
+    server_.SendMessage(entity_data_message);
   }
   else {
     ErrorMessage message("User does not exist.");
@@ -157,8 +147,10 @@ void World::Visit(UseEvent &use_event) {
 
 }
 
-void World::Visit(ViewUpdateEvent &view_update_event) {
-  View *view = map_->GetView(entities_[view_update_event.source()], 20, 10);
+void World::Visit(ViewUpdateEvent &view_update_event) { 
+  View *view = map_->GetView(entities_[view_update_event.source()], 
+                             view_update_event.width(), 
+                             view_update_event.height());
   ViewUpdateMessage view_update_message(view);
   server_.SendMessage(view_update_message);
   delete view;

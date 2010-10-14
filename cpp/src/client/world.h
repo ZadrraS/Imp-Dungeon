@@ -5,10 +5,13 @@
 #include <string>
 
 #include "client/client.h"
-#include "logic/map/view.h"
 #include "logic/network/messages/messagevisitorinterface.h"
 
 namespace impdungeon {
+
+class Entity;
+class View;
+
 namespace client {
 
 class World : public MessageVisitorInterface {
@@ -26,10 +29,12 @@ class World : public MessageVisitorInterface {
   void Visit(ItemDataMessage &item_data_message);
   void Visit(ViewUpdateMessage &view_update_message);
 
+  void Display();
+
   Client client_;
 
   View *view_;
-  
+  Entity *player_;  
 };
 
 }  // namespace client

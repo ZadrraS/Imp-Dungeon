@@ -3,7 +3,7 @@
 #include <cstddef>
 
 #include "logic/map/attributes/position.h"
-
+#include <iostream>
 namespace impdungeon {
 
 View::View(char *tiles, int width, int height)
@@ -24,6 +24,7 @@ void View::Update(char *tiles) {
 }
 
 char View::GetTile(const Position &position) const {
+  
   return tiles_[position.y() * width_ + position.x()];
 }
 

@@ -8,7 +8,7 @@
 
 #include "logic/network/networkerror.h"
 #include "logic/network/events/eventhandlerinterface.h"
-#include "logic/network/messages/message.h"
+#include "logic/network/message.h"
 #include <iostream>
 
 namespace impdungeon {
@@ -51,14 +51,12 @@ void Server::Disconnect() {
 }
 
 void Server::SendMessage(Message &message) {  
-  char *data = serializer_.SerializeMessage(message);
-  int s_len = send(client_socket_, data, Serializer::kMaxMessageSize, 0);
+  int s_len = send(client_socket_, message.buffer(), Message::kMaxBufferSize, 0);
   if (s_len <= 0)
     throw NetworkError("Error sending package.");
 
   std::cout << "Client: " << inet_ntoa(client_address_.sin_addr) 
             << " Sent: " << s_len << " bytes." << std::endl;
-  delete [] data;
 }
 
 void Server::Listen() {

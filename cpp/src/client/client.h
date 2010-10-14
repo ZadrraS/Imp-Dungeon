@@ -22,7 +22,7 @@ class Client {
   void Disconnect();
 
   void SendEvent(Event &event);
-  Message *Listen();
+  char *Listen();
 
  private:
   struct sockaddr_in server_address_;

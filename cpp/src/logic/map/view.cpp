@@ -6,8 +6,8 @@
 #include <iostream>
 namespace impdungeon {
 
-View::View(char *tiles, int width, int height)
-  : tiles_(tiles), width_(width), height_(height) {
+View::View(char *tiles, int width, int height, const Position &position)
+  : tiles_(tiles), width_(width), height_(height), position_(position) {
 
 }
 
@@ -24,8 +24,11 @@ void View::Update(char *tiles) {
 }
 
 char View::GetTile(const Position &position) const {
-  
   return tiles_[position.y() * width_ + position.x()];
+}
+
+Position View::TranslateGlobal(const Position &global_position) {
+  return global_position - position_;
 }
 
 const char *View::tiles() const {
@@ -38,6 +41,10 @@ int View::width() const {
 
 int View::height() const {
   return height_;
+}
+
+Position View::position() const {
+  return position_;
 }
 
 }  // namespace impdungeon

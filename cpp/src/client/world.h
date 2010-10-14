@@ -4,8 +4,10 @@
 #include <stdint.h>
 #include <string>
 
+#include <boost/unordered_map.hpp>
+
 #include "client/client.h"
-#include "logic/network/messages/messagevisitorinterface.h"
+#include "logic/map/attributes/position.h"
 
 namespace impdungeon {
 
@@ -14,7 +16,7 @@ class View;
 
 namespace client {
 
-class World : public MessageVisitorInterface {
+class World {
  public:
   World(const std::string &ip, uint16_t port);
   virtual ~World();
@@ -23,18 +25,14 @@ class World : public MessageVisitorInterface {
   void Run();
 
  private:
-  // Inherited from MessageVisitorInterface
-  void Visit(ErrorMessage &error_message);
-  void Visit(EntityDataMessage &entity_data_message);
-  void Visit(ItemDataMessage &item_data_message);
-  void Visit(ViewUpdateMessage &view_update_message);
-
   void Display();
 
   Client client_;
 
   View *view_;
   Entity *player_;  
+
+  boost::unordered_map<boost::uuids::uuid, Position> entities_;
 };
 
 }  // namespace client

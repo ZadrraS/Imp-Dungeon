@@ -16,7 +16,7 @@
 #include "logic/loaders/itemloader.h"
 
 #include "logic/network/events/events.h"
-#include "logic/network/messages/messages.h"
+#include "logic/network/message.h"
 
 #include "logic/map/view.h"
 
@@ -104,11 +104,14 @@ void World::Visit(LoginEvent &login_event) {
     std::cout << "Player " << login_event.user_name() 
               << " has just connected." << std::endl;
 
-    EntityDataMessage entity_data_message(entity);
-    server_.SendMessage(entity_data_message);
+    Message message(Message::kEntityDataMessage);
+    message.InjectEntity(*entity);
+    message.InjectPosition(entities_[entity->id()]);
+    server_.SendMessage(message);
   }
   else {
-    ErrorMessage message("User does not exist.");
+    Message message(Message::kErrorMessage);
+    message.InjectError("User does not exist.");
     server_.SendMessage(message);
   }
 }
@@ -151,8 +154,9 @@ void World::Visit(ViewUpdateEvent &view_update_event) {
   View *view = map_->GetView(entities_[view_update_event.source()], 
                              view_update_event.width(), 
                              view_update_event.height());
-  ViewUpdateMessage view_update_message(view);
-  server_.SendMessage(view_update_message);
+  Message message(Message::kViewUpdateMessage);
+  message.InjectView(*view);
+  server_.SendMessage(message);
   delete view;
 }
 

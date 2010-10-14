@@ -7,7 +7,7 @@
 
 #include "logic/network/events/events.h"
 
-#include "logic/network/messages/messages.h"
+#include "logic/network/message.h"
 
 #include "logic/map/view.h"
 #include "logic/map/entity.h"
@@ -109,53 +109,6 @@ Event *Serializer::UnserializeEvent(char *data) {
   return event;
 }
 
-char *Serializer::SerializeMessage(Message &message) {
-  message.Accept(*this);
-
-  return storage_;
-}
-
-Message *Serializer::UnserializeMessage(char *data) {
-  size_t offset = 0; 
-  MessageType message_type = ExtractMessageType(data, offset);
-  Message *message;
-  switch (message_type) {
-    case kErrorMessage: {
-      std::string msg = ExtractString(data, offset);
-
-      message = new ErrorMessage(msg);
-      break;
-    }
-    case kEntityDataMessage: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
-      std::string name = ExtractString(data, offset);
-      int health_value = ExtractInt(data, offset);
-      int health_bound = ExtractInt(data, offset);
-      BoundedAttribute health(health_value, health_bound);
-
-      Entity *entity = new Entity(name, health);
-      entity->AssignId(source);
-
-      message = new EntityDataMessage(entity);
-      break;
-    }
-    case kViewUpdateMessage: {
-      int width = ExtractInt(data, offset);
-      int height = ExtractInt(data, offset);
-      char *view_data = ExtractArray(width*height, data, offset);
-      View *view = new View(view_data, width, height);
-      message = new ViewUpdateMessage(view);
-      break;
-    }
-    default: {
-      message = NULL;
-      break;
-    }
-    // TODO(ZadrraS): Code in all other message parsing.
-  }
-  return message;
-}
-
 void Serializer::Visit(LoginEvent &login_event) {
   storage_ = new char [kMaxEventSize];
   memset(storage_, 0, kMaxEventSize);
@@ -254,66 +207,12 @@ void Serializer::Visit(ViewUpdateEvent &view_update_event) {
   InsertInt(view_update_event.height(), storage_, offset);
 }
 
-void Serializer::Visit(ErrorMessage &error_message) {
-  storage_ = new char [kMaxMessageSize];
-  memset(storage_, 0, kMaxMessageSize);
-  size_t offset = 0;
-
-  InsertMessageType(kErrorMessage, storage_, offset);
-  InsertString(error_message.message(), storage_, offset);
-}
-
-void Serializer::Visit(EntityDataMessage &entity_data_message) {
-  storage_ = new char [kMaxMessageSize];
-  memset(storage_, 0, kMaxMessageSize);
-  size_t offset = 0;
-
-  Entity *entity = entity_data_message.entity();
-  InsertMessageType(kEntityDataMessage, storage_, offset);
-  InsertUuid(entity->id(), storage_, offset);
-  InsertString(entity->name(), storage_, offset);
-  InsertInt(entity->health().value(), storage_, offset);
-  InsertInt(entity->health().bound(), storage_, offset);
-  // TODO(ZadrraS): Finish entity data message serialization.
-}
-
-void Serializer::Visit(ItemDataMessage &item_data_message) {
-  storage_ = new char [kMaxMessageSize];
-  memset(storage_, 0, kMaxMessageSize);
-  size_t offset = 0;
-
-  InsertMessageType(kItemDataMessage, storage_, offset);
-  // TODO(ZadrraS): Finish item data message serialization.
-}
-
-void Serializer::Visit(ViewUpdateMessage &view_update_message) {
-  storage_ = new char [kMaxMessageSize];
-  memset(storage_, 0, kMaxMessageSize);
-  size_t offset = 0;
-  InsertMessageType(kViewUpdateMessage, storage_, offset);
-  InsertInt(view_update_message.view()->width(), storage_, offset);
-  InsertInt(view_update_message.view()->height(), storage_, offset); 
-  InsertArray(view_update_message.view()->tiles(), 
-              view_update_message.view()->width() * 
-              view_update_message.view()->height(), 
-              storage_, offset);
-}
-
 Serializer::EventType Serializer::ExtractEventType(char *data, size_t &offset) {
   EventType event_type;
   memcpy(&event_type, data + offset, sizeof(EventType));
   offset += sizeof(EventType);
 
   return event_type;
-}
-
-Serializer::MessageType Serializer::ExtractMessageType(char *data, 
-                                                       size_t &offset) {
-  MessageType message_type;
-  memcpy(&message_type, data + offset, sizeof(MessageType));
-  offset += sizeof(MessageType);
-
-  return message_type;
 }
 
 int Serializer::ExtractInt(char *data, size_t &offset) {
@@ -359,12 +258,6 @@ void Serializer::InsertEventType(EventType event_type, char *data, size_t &offse
   memcpy(data + offset, &event_type, sizeof(EventType));
 
   offset += sizeof(EventType);
-}
-
-void Serializer::InsertMessageType(MessageType message_type, char *data, size_t &offset) {
-  memcpy(data + offset, &message_type, sizeof(MessageType));
-
-  offset += sizeof(MessageType);
 }
 
 void Serializer::InsertInt(int value, char *data, size_t &offset) {

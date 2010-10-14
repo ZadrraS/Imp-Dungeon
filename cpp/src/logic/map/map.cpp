@@ -71,7 +71,8 @@ View *Map::GetView(const Position &position, int width, int height) const {
     pos_it.set_y(pos_it.y() + 1);
   }
 
-  return new View(view_data, width, height);
+  return new View(view_data, width, height, 
+                  Position(position.x() - radius_x, position.y() - radius_y));
 }
 
 int Map::width() {

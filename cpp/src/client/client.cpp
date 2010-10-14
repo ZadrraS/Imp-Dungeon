@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #include "logic/network/events/event.h"
-#include "logic/network/messages/message.h"
+#include "logic/network/message.h"
 #include "logic/network/networkerror.h"
 #include <iostream>
 
@@ -27,7 +27,7 @@ Client::Client(const std::string &ip, uint16_t port) : socket_(-1) {
 }
 
 Client::~Client() {
-
+  
 }
 
 void Client::Init() {
@@ -56,12 +56,11 @@ void Client::SendEvent(Event &event) {
   delete [] data;
 }
 
-Message *Client::Listen() {
-  char buffer[Serializer::kMaxMessageSize];
-  if (recv(socket_, buffer, sizeof(buffer), 0) <= 0)
+char *Client::Listen() {
+  char *buffer = new char[Message::kMaxBufferSize];
+  if (recv(socket_, buffer, Message::kMaxBufferSize, 0) <= 0)
     throw NetworkError("Error receiving package.");  
-  Message *message = serializer_.UnserializeMessage(buffer);
-  return message;
+  return buffer;
 }
 
 }  // namespace client

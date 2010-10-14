@@ -8,6 +8,7 @@
 
 #include "client/client.h"
 #include "logic/map/attributes/position.h"
+#include "client/inputmanager.h"
 
 namespace impdungeon {
 
@@ -28,6 +29,7 @@ class World {
   void Display();
 
   Client client_;
+  InputManager input_manager_;
 
   View *view_;
   Entity *player_;  

@@ -65,7 +65,7 @@ class World : public EventVisitorInterface,
   MapLoader *map_loader_;
   ItemLoader *item_loader_;
 
-  std::queue <Event *> events_;
+  std::queue<Event *> events_;
 
   bool running_;
 

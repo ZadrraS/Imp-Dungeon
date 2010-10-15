@@ -3,6 +3,11 @@
 
 #include <netinet/in.h>
 #include <stdint.h>
+#include <sys/types.h>
+#include <vector>
+
+#include <boost/uuid/uuid.hpp>
+#include <boost/unordered_map.hpp>
 
 #include "logic/network/serializer.h"
 
@@ -21,19 +26,23 @@ class Server {
   void Init();
   void Disconnect();
 
-  void SendMessage(Message &message);
+  void SendMessage(Message &message, int descriptor);
   void Listen();
-  
 
  private:
+  void DisconnectClient(int descriptor);
+
   int listen_socket_;
-  int client_socket_;
 
   struct sockaddr_in server_address_;
-  struct sockaddr_in client_address_;
 
   Serializer serializer_;
   EventHandlerInterface &event_handler_;
+
+  boost::unordered_map<int, boost::uuids::uuid> client_ids_; 
+  std::vector<int> descriptor_list_;
+  fd_set descriptors_;
+  int max_descriptor_;
 };
 
 }  // namespace server

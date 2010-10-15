@@ -4,12 +4,14 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <iostream>
+#include <algorithm>
 #include <cstring>
+
+#include <boost/foreach.hpp>
 
 #include "logic/network/networkerror.h"
 #include "logic/network/events/eventhandlerinterface.h"
 #include "logic/network/message.h"
-#include <iostream>
 
 namespace impdungeon {
 namespace server {
@@ -18,11 +20,12 @@ Server::Server(uint16_t port, EventHandlerInterface &event_handler)
   : listen_socket_(-1),
     event_handler_(event_handler) {
   memset(&server_address_, 0, sizeof(server_address_));
-  memset(&client_address_, 0, sizeof(client_address_));
 
   server_address_.sin_family = AF_INET;
   server_address_.sin_addr.s_addr = htonl(INADDR_ANY); 
   server_address_.sin_port = htons(port);
+
+  FD_ZERO(&descriptors_);
 }
 
 Server::~Server() {
@@ -38,47 +41,89 @@ void Server::Init() {
            sizeof(server_address_)) == -1) 
     throw NetworkError("Error binding listening socket.");
 
-  if (listen(listen_socket_, 5) != 0)
-    throw NetworkError("Error while trying to listen().");
-
-  socklen_t client_address_length = sizeof(struct sockaddr);
-  client_socket_ = accept(listen_socket_, (struct sockaddr *)&client_address_, 
-                         &client_address_length);
+  FD_SET(listen_socket_, &descriptors_);
+  max_descriptor_ = listen_socket_;
+  descriptor_list_.push_back(listen_socket_);
 }
 
 void Server::Disconnect() {
-  close(client_socket_);
 }
 
-void Server::SendMessage(Message &message) {  
-  int s_len = send(client_socket_, message.buffer(), Message::kMaxBufferSize, 0);
-  if (s_len <= 0)
-    throw NetworkError("Error sending package.");
-
-  std::cout << "Client: " << inet_ntoa(client_address_.sin_addr) 
-            << " Sent: " << s_len << " bytes." << std::endl;
+void Server::SendMessage(Message &message, int descriptor) {
+  if (std::find(descriptor_list_.begin(), descriptor_list_.end(), descriptor) !=
+      descriptor_list_.end()) {
+    int s_len = send(descriptor, message.buffer(), Message::kMaxBufferSize, 0);
+    if (s_len <= 0) {
+      std::cout << "Client " << descriptor
+                << " is not listening. Kicking from server..." << std::endl;
+      DisconnectClient(descriptor);
+    }
+  }
 }
 
 void Server::Listen() {
   if (listen_socket_ == -1)
     throw NetworkError("Server not initialized.");
- 
-  if (listen(listen_socket_, 5) != 0)
-    throw NetworkError("Error while trying to listen().");
 
-  char buffer[Serializer::kMaxEventSize];
-  memset(&buffer, 0, sizeof(buffer));
-  
-  int r_len = recv(client_socket_, buffer, sizeof(buffer), 0);
-  if (r_len <= 0)
-    throw NetworkError("Error receiving package.");
-  std::cout << "Client: " << inet_ntoa(client_address_.sin_addr) 
-            << " Received: " << r_len << " bytes." << std::endl;
+  if (listen(listen_socket_, 10) == -1)
+    throw NetworkError("Error listen()'ing.");
 
-  Event *event = serializer_.UnserializeEvent(buffer);
-  if (event != NULL) {
-    event_handler_.PushEvent(event);
+  fd_set read_descriptors = descriptors_;
+
+  if (select(max_descriptor_ + 1, &read_descriptors, NULL, NULL, NULL) == -1) 
+    throw NetworkError("Error select()'ing.");
+
+  BOOST_FOREACH(int &descriptor, descriptor_list_) {
+    if (descriptor == listen_socket_) {  // New client connecting
+      socklen_t client_address_length = sizeof(struct sockaddr);
+      struct sockaddr_in client_address;
+      memset(&client_address, 0, sizeof(client_address));
+
+      int new_descriptor = accept(listen_socket_,
+                                  (struct sockaddr *)&client_address,
+                                  &client_address_length);
+      if (new_descriptor != -1) {
+        FD_SET(new_descriptor, &descriptors_);
+        descriptor_list_.push_back(new_descriptor);
+
+        if (new_descriptor > max_descriptor_)
+          max_descriptor_ = new_descriptor;
+
+        std::cout << "New connection from "
+                  << inet_ntoa(client_address.sin_addr) 
+                  << ". Assigning descriptor: " << new_descriptor << "." 
+                  << std::endl;
+      }
+    }
+    else {  // Client sending data
+      char buffer[Serializer::kMaxEventSize];
+      memset(&buffer, 0, sizeof(buffer));
+      int r_len = recv(descriptor, buffer, sizeof(buffer), 0);
+      if (r_len <= 0) {  // Lost connection to client
+        std::cout << "Client " << descriptor << " has disconnected." << std::endl;
+        DisconnectClient(descriptor);
+      }
+      else {  // Parse clients sent data
+        Event *event = serializer_.UnserializeEvent(buffer);
+        if (event != NULL) {
+          event_handler_.PushEvent(event);
+        }
+        else {
+          std::cout << "Client " << descriptor << " is sending malformed data. "
+                    << "Kicking from server..." << std::endl;
+          DisconnectClient(descriptor);
+        }
+      }
+    }
   }
+}
+
+void Server::DisconnectClient(int descriptor) {
+  FD_CLR(descriptor, &descriptors_);
+  std::remove(descriptor_list_.begin(), descriptor_list_.end(), descriptor);
+  client_ids_.erase(descriptor);
+  close(descriptor);
+  // TODO(ZadrraS): Tell World to remove said client.
 }
 
 }  // namespace server

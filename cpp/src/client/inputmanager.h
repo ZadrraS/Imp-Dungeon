@@ -10,7 +10,8 @@ enum ActionType {
   kDown,
   kLeft,
   kRight,
-  kLook
+  kLook,
+  kQuit
 };
 
 class InputManager {

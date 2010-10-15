@@ -35,6 +35,8 @@ class World {
   Entity *player_;  
 
   boost::unordered_map<boost::uuids::uuid, Position> entities_;
+
+  bool running_;
 };
 
 }  // namespace client

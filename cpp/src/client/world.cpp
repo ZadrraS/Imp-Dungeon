@@ -15,7 +15,7 @@ namespace impdungeon {
 namespace client {
 
 World::World(const std::string &ip, uint16_t port) 
-  : client_(ip, port), view_(NULL), player_(NULL) {
+  : client_(ip, port), view_(NULL), player_(NULL), running_(false) {
 
 }
 
@@ -58,7 +58,8 @@ void World::Run() {
   Message view_update_message(client_.Listen());
   view_ = view_update_message.ExtractView();
 
-  while (true) {
+  running_ = true;
+  while (running_) {
     Display();
 
     Position move(entities_[player_->id()]);
@@ -83,6 +84,11 @@ void World::Run() {
       }
       case kLook: {
 
+        break;
+      }
+      case kQuit: {
+        running_ = false;
+        continue;
         break;
       }
       default: {

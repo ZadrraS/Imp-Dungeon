@@ -47,6 +47,10 @@ ActionType InputManager::GetInput() {
       action = kLook;
       break;
     }
+    case 'q': {
+      action = kQuit;
+      break;
+    }
     default: {
       action = kOther;
       break;

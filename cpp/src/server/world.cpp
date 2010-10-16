@@ -66,7 +66,7 @@ void World::Init() {
   BOOST_FOREACH(ObjectData &object, object_data) {
     Item *item = item_loader_->GetItem(object.name);
     boost::uuids::uuid item_id = item_manager_.SpawnItem(item);
-    items_[item_id] = object.position;    
+    items_[item_id] = object.position;
   } 
 }
 
@@ -100,6 +100,7 @@ void World::Visit(LoginEvent &login_event) {
 
     boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
     entities_[entity_id] = position;
+    server_.AddClientId(login_event.descriptor(), entity_id);
 
     std::cout << "Player " << login_event.user_name() 
               << " has just connected." << std::endl;

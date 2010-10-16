@@ -75,45 +75,47 @@ void Server::Listen() {
     throw NetworkError("Error select()'ing.");
 
   BOOST_FOREACH(int &descriptor, descriptor_list_) {
-    if (descriptor == listen_socket_) {  // New client connecting
-      socklen_t client_address_length = sizeof(struct sockaddr);
-      struct sockaddr_in client_address;
-      memset(&client_address, 0, sizeof(client_address));
+    if (FD_ISSET(descriptor, &read_descriptors)) {
+      if (descriptor == listen_socket_) {  // New client connecting
+        socklen_t client_address_length = sizeof(struct sockaddr);
+        struct sockaddr_in client_address;
+        memset(&client_address, 0, sizeof(client_address));
 
-      int new_descriptor = accept(listen_socket_,
-                                  (struct sockaddr *)&client_address,
-                                  &client_address_length);
-      if (new_descriptor != -1) {
-        FD_SET(new_descriptor, &descriptors_);
-        descriptor_list_.push_back(new_descriptor);
+        int new_descriptor = accept(listen_socket_,
+                                    (struct sockaddr *)&client_address,
+                                    &client_address_length);
+        if (new_descriptor != -1) {
+          FD_SET(new_descriptor, &descriptors_);
+          descriptor_list_.push_back(new_descriptor);
 
-        if (new_descriptor > max_descriptor_)
-          max_descriptor_ = new_descriptor;
+          if (new_descriptor > max_descriptor_)
+            max_descriptor_ = new_descriptor;
 
-        std::cout << "New connection from "
-                  << inet_ntoa(client_address.sin_addr) 
-                  << ". Assigning descriptor: " << new_descriptor << "." 
-                  << std::endl;
-      }
-    }
-    else {  // Client sending data
-      char buffer[Serializer::kMaxEventSize];
-      memset(&buffer, 0, sizeof(buffer));
-      int r_len = recv(descriptor, buffer, sizeof(buffer), 0);
-      if (r_len <= 0) {  // Lost connection to client
-        std::cout << "Client " << descriptor << " has disconnected." << std::endl;
-        DisconnectClient(descriptor);
-      }
-      else {  // Parse clients sent data
-        Event *event = serializer_.UnserializeEvent(buffer);
-        if (event != NULL) {
-          event->set_descriptor(descriptor);
-          event_handler_.PushEvent(event);
+          std::cout << "New connection from "
+                    << inet_ntoa(client_address.sin_addr) 
+                    << ". Assigning descriptor: " << new_descriptor << "." 
+                    << std::endl;
         }
-        else {
-          std::cout << "Client " << descriptor << " is sending malformed data. "
-                    << "Kicking from server..." << std::endl;
+      }
+      else {  // Client sending data
+        char buffer[Serializer::kMaxEventSize];
+        memset(&buffer, 0, sizeof(buffer));
+        int r_len = recv(descriptor, buffer, sizeof(buffer), 0);
+        if (r_len <= 0) {  // Lost connection to client
+          std::cout << "Client " << descriptor << " has disconnected." << std::endl;
           DisconnectClient(descriptor);
+        }
+        else {  // Parse clients sent data
+          Event *event = serializer_.UnserializeEvent(buffer);
+          if (event != NULL) {
+            event->set_descriptor(descriptor);
+            event_handler_.PushEvent(event);
+          }
+          else {
+            std::cout << "Client " << descriptor << " is sending malformed data. "
+                      << "Kicking from server..." << std::endl;
+            DisconnectClient(descriptor);
+          }
         }
       }
     }

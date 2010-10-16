@@ -49,6 +49,13 @@ bool ClientManager::HasClient(int descriptor) {
   return false;
 }
 
+bool ClientManager::IsClientRegistered(int descriptor) {
+  if (HasClient(descriptor) && client_ids_.count(descriptor) > 0)
+    return true;
+
+  return false;
+}
+
 fd_set ClientManager::CopyClientDescriptors() const {
   return client_descriptors_;
 }

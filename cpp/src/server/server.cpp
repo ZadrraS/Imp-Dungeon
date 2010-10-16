@@ -54,9 +54,14 @@ void Server::SendMessage(Message &message, int descriptor) {
       std::cout << "Client " << descriptor
                 << " is not listening. Kicking from server..." << std::endl;
 
-      Event *kick_event = new LogoffEvent();
-      kick_event->set_descriptor(descriptor);
-      event_handler_.PushEvent(kick_event);
+      if (client_manager_.IsClientRegistered(descriptor)) {
+        Event *kick_event = new LogoffEvent();
+        kick_event->set_descriptor(descriptor);
+        event_handler_.PushEvent(kick_event);
+      }
+      else {
+        DisconnectClient(descriptor);
+      }
     }
   }
 }
@@ -103,9 +108,14 @@ void Server::Listen() {
         if (r_len <= 0) {  // Lost connection to client
           std::cout << "Client " << descriptor 
                     << " has disconnected." << std::endl;
-          Event *event = new LogoffEvent();
-          event->set_descriptor(descriptor);
-          event_handler_.PushEvent(event);
+          if (client_manager_.IsClientRegistered(descriptor)) {
+            Event *kick_event = new LogoffEvent();
+            kick_event->set_descriptor(descriptor);
+            event_handler_.PushEvent(kick_event);
+          }
+          else {
+            DisconnectClient(descriptor);
+          }
         }
         else {  // Parse clients sent data
           Event *event = serializer_.UnserializeEvent(buffer);
@@ -116,9 +126,15 @@ void Server::Listen() {
           else {
             std::cout << "Client " << descriptor << " is sending malformed data. "
                       << "Kicking from server..." << std::endl;
-            Event *kick_event = new LogoffEvent();
-            kick_event->set_descriptor(descriptor);
-            event_handler_.PushEvent(kick_event);
+
+            if (client_manager_.IsClientRegistered(descriptor)) {
+              Event *kick_event = new LogoffEvent();
+              kick_event->set_descriptor(descriptor);
+              event_handler_.PushEvent(kick_event);
+            }
+            else {
+              DisconnectClient(descriptor);
+            }
           }
         }
       }

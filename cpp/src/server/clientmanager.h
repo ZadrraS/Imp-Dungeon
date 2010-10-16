@@ -24,6 +24,7 @@ class ClientManager {
   void RegisterClient(int descriptor, const boost::uuids::uuid &id);
 
   bool HasClient(int descriptor);
+  bool IsClientRegistered(int descriptor);
 
   fd_set CopyClientDescriptors() const;
 

@@ -4,8 +4,7 @@
 
 namespace impdungeon {
 
-EquipEvent::EquipEvent(boost::uuids::uuid &source, boost::uuids::uuid &target) 
-  : TargetedPlayerEvent(source, target) {
+EquipEvent::EquipEvent(boost::uuids::uuid &target) : TargetedEvent(target) {
 
 }
 

@@ -4,9 +4,7 @@
 
 namespace impdungeon {
 
-MoveEvent::MoveEvent(boost::uuids::uuid &source, Position &move) 
-  : PlayerEvent(source),
-    move_(move) {
+MoveEvent::MoveEvent(Position &move) : move_(move) {
 
 }
 

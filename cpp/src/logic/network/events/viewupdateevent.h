@@ -1,13 +1,13 @@
 #ifndef IMPDUNGEON_LOGIC_NETWORK_EVENTS_VIEWUPDATEEVENT_H_
 #define IMPDUNGEON_LOGIC_NETWORK_EVENTS_VIEWUPDATEEVENT_H_
 
-#include "logic/network/events/playerevent.h"
+#include "logic/network/events/event.h"
 
 namespace impdungeon {
 
-class ViewUpdateEvent : public PlayerEvent {
+class ViewUpdateEvent : public Event {
  public:
-  ViewUpdateEvent(boost::uuids::uuid &source, int width, int height);
+  ViewUpdateEvent(int width, int height);
   virtual ~ViewUpdateEvent();
 
   void Accept(EventVisitorInterface &event_visitor);

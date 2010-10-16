@@ -1,13 +1,13 @@
 #ifndef IMPDUNGEON_LOGIC_NETWORK_EVENTS_TAKEEVENT_H_
 #define IMPDUNGEON_LOGIC_NETWORK_EVENTS_TAKEEVENT_H_
 
-#include "logic/network/events/targetedplayerevent.h"
+#include "logic/network/events/targetedevent.h"
 
 namespace impdungeon {
 
-class TakeEvent : public TargetedPlayerEvent {
+class TakeEvent : public TargetedEvent {
  public:
-  TakeEvent(boost::uuids::uuid &source, boost::uuids::uuid &target);
+  TakeEvent(boost::uuids::uuid &target);
   virtual ~TakeEvent();
 
   void Accept(EventVisitorInterface &event_visitor);

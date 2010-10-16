@@ -4,8 +4,8 @@
 
 namespace impdungeon {
 
-AttackEvent::AttackEvent(boost::uuids::uuid &source, boost::uuids::uuid &target) 
-  : TargetedPlayerEvent(source, target) {
+AttackEvent::AttackEvent(boost::uuids::uuid &target) 
+  : TargetedEvent(target) {
 
 }
 

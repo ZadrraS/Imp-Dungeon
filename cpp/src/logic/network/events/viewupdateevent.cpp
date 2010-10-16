@@ -4,9 +4,8 @@
 
 namespace impdungeon {
 
-ViewUpdateEvent::ViewUpdateEvent(boost::uuids::uuid &source, 
-                                 int width, int height) 
-  : PlayerEvent(source), width_(width), height_(height) {
+ViewUpdateEvent::ViewUpdateEvent(int width, int height) 
+  : width_(width), height_(height) {
 
 }
 

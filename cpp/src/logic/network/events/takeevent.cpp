@@ -4,8 +4,8 @@
 
 namespace impdungeon {
 
-TakeEvent::TakeEvent(boost::uuids::uuid &source, boost::uuids::uuid &target) 
-  : TargetedPlayerEvent(source, target) {
+TakeEvent::TakeEvent(boost::uuids::uuid &target) 
+  : TargetedEvent(target) {
 
 }
 

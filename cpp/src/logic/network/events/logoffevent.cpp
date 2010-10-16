@@ -4,8 +4,7 @@
 
 namespace impdungeon {
 
-LogoffEvent::LogoffEvent(boost::uuids::uuid &source) 
-  : PlayerEvent(source) {
+LogoffEvent::LogoffEvent() {
 
 }
 

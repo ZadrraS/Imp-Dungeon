@@ -1,13 +1,13 @@
 #ifndef IMPDUNGEON_LOGIC_NETWORK_EVENTS_LOGOFFEVENT_H_
 #define IMPDUNGEON_LOGIC_NETWORK_EVENTS_LOGOFFEVENT_H_
 
-#include "logic/network/events/playerevent.h"
+#include "logic/network/events/event.h"
 
 namespace impdungeon {
 
-class LogoffEvent : public PlayerEvent {
+class LogoffEvent : public Event {
  public:
-  LogoffEvent(boost::uuids::uuid &source);
+  LogoffEvent();
   virtual ~LogoffEvent();
 
   void Accept(EventVisitorInterface &event_visitor);

@@ -11,6 +11,12 @@ class Event {
   virtual ~Event();
 
   virtual void Accept(EventVisitorInterface &event_visitor) = 0;
+
+  void set_descriptor(int descriptor);
+  int descriptor() const;
+
+ private:
+  int descriptor_;
 };
 
 }  // namespace events

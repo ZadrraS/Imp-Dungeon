@@ -118,7 +118,10 @@ void World::Visit(LoginEvent &login_event) {
 }
 
 void World::Visit(LogoffEvent &logoff_event) {
-
+  boost::uuids::uuid source = server_.GetClientId(logoff_event.descriptor());
+  server_.RemoveClientId(logoff_event.descriptor());
+  entities_.erase(source);
+  entity_manager_.DespawnEntity(source);
 }
 
 void World::Visit(AttackEvent &attack_event) {

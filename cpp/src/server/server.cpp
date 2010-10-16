@@ -12,6 +12,7 @@
 #include "logic/network/networkerror.h"
 #include "logic/network/events/eventhandlerinterface.h"
 #include "logic/network/events/event.h"
+#include "logic/network/events/logoffevent.h"
 #include "logic/network/message.h"
 
 namespace impdungeon {
@@ -69,10 +70,16 @@ void Server::Listen() {
   if (listen(listen_socket_, 10) == -1)
     throw NetworkError("Error listen()'ing.");
 
-  fd_set read_descriptors = descriptors_;
+  fd_set read_descriptors;
+  FD_ZERO(&read_descriptors);
+  read_descriptors = descriptors_;
 
   if (select(max_descriptor_ + 1, &read_descriptors, NULL, NULL, NULL) == -1) 
     throw NetworkError("Error select()'ing.");
+
+  std::vector<int> disconnection_list;
+
+  
 
   BOOST_FOREACH(int &descriptor, descriptor_list_) {
     if (FD_ISSET(descriptor, &read_descriptors)) {
@@ -103,7 +110,7 @@ void Server::Listen() {
         int r_len = recv(descriptor, buffer, sizeof(buffer), 0);
         if (r_len <= 0) {  // Lost connection to client
           std::cout << "Client " << descriptor << " has disconnected." << std::endl;
-          DisconnectClient(descriptor);
+          disconnection_list.push_back(descriptor);
         }
         else {  // Parse clients sent data
           Event *event = serializer_.UnserializeEvent(buffer);
@@ -114,11 +121,15 @@ void Server::Listen() {
           else {
             std::cout << "Client " << descriptor << " is sending malformed data. "
                       << "Kicking from server..." << std::endl;
-            DisconnectClient(descriptor);
+            disconnection_list.push_back(descriptor);
           }
         }
       }
     }
+  }
+
+  BOOST_FOREACH(int &descriptor, disconnection_list) {
+    DisconnectClient(descriptor);
   }
 }
 
@@ -140,10 +151,16 @@ void Server::RemoveClientId(int descriptor) {
 
 void Server::DisconnectClient(int descriptor) {
   FD_CLR(descriptor, &descriptors_);
-  std::remove(descriptor_list_.begin(), descriptor_list_.end(), descriptor);
-  client_ids_.erase(descriptor);
+  descriptor_list_.erase(std::remove(descriptor_list_.begin(),
+                                     descriptor_list_.end(),
+                                     descriptor), descriptor_list_.end());
   close(descriptor);
-  // TODO(ZadrraS): Tell World to remove said client.
+
+  if (client_ids_.count(descriptor) > 0) {
+    Event *event = new LogoffEvent();
+    event->set_descriptor(descriptor);
+    event_handler_.PushEvent(event);
+  }
 }
 
 }  // namespace server

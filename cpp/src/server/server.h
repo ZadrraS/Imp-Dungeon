@@ -10,6 +10,7 @@
 #include <boost/unordered_map.hpp>
 
 #include "logic/network/serializer.h"
+#include "server/clientmanager.h"
 
 namespace impdungeon {
 
@@ -30,23 +31,17 @@ class Server {
   void Listen();
 
   boost::uuids::uuid GetClientId(int descriptor);
-  void AddClientId(int descriptor, boost::uuids::uuid id);
-  void RemoveClientId(int descriptor);
-
- private:
+  void RegisterClient(int descriptor, boost::uuids::uuid id);
   void DisconnectClient(int descriptor);
 
+ private:
   int listen_socket_;
 
   struct sockaddr_in server_address_;
 
   Serializer serializer_;
   EventHandlerInterface &event_handler_;
-
-  boost::unordered_map<int, boost::uuids::uuid> client_ids_; 
-  std::vector<int> descriptor_list_;
-  fd_set descriptors_;
-  int max_descriptor_;
+  ClientManager client_manager_;
 };
 
 }  // namespace server

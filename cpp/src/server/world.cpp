@@ -100,7 +100,7 @@ void World::Visit(LoginEvent &login_event) {
 
     boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
     entities_[entity_id] = position;
-    server_.AddClientId(login_event.descriptor(), entity_id);
+    server_.RegisterClient(login_event.descriptor(), entity_id);
 
     std::cout << "Player " << login_event.user_name() 
               << " has just connected." << std::endl;
@@ -119,7 +119,7 @@ void World::Visit(LoginEvent &login_event) {
 
 void World::Visit(LogoffEvent &logoff_event) {
   boost::uuids::uuid source = server_.GetClientId(logoff_event.descriptor());
-  server_.RemoveClientId(logoff_event.descriptor());
+  server_.DisconnectClient(logoff_event.descriptor());
   entities_.erase(source);
   entity_manager_.DespawnEntity(source);
 }

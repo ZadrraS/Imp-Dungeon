@@ -57,15 +57,11 @@ Item *Message::ExtractItem() {
 }
 
 Position *Message::ExtractPosition() {
-  if (message_type_ == kEntityDataMessage) {
-    int x = ExtractInt();
-    int y = ExtractInt();
-    Position *position = new Position(x, y);
+  int x = ExtractInt();
+  int y = ExtractInt();
+  Position *position = new Position(x, y);
 
-    return position;
-  }
-  
-  return NULL;
+  return position;
 }
 
 View *Message::ExtractView() {

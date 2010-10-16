@@ -1,6 +1,8 @@
 #include "client/world.h"
 
 #include <iostream>
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/foreach.hpp>
@@ -24,8 +26,6 @@ World::~World() {
     delete view_;
   if (player_)
     delete player_;
-  
-  client_.Disconnect();
 }
 
 void World::Init() {
@@ -47,20 +47,20 @@ void World::Run() {
   }
   else {
     player_ = entity_data_message.ExtractEntity();
-    Position *position = entity_data_message.ExtractPosition();    
+    Position *position = entity_data_message.ExtractPosition();
     entities_[player_->id()] = *position;
     delete position;
   }
 
-  boost::uuids::uuid player_id = player_->id();
-  ViewUpdateEvent view_update_event(61, 13);
-  client_.SendEvent(view_update_event);
-  Message view_update_message(client_.Listen());
-  view_ = view_update_message.ExtractView();
+  RequestUpdate();
 
   running_ = true;
   while (running_) {
     Display();
+    BOOST_FOREACH(std::string &message, message_log_) {
+      std::cout << message << std::endl;
+    }
+    message_log_.clear();
 
     Position move(entities_[player_->id()]);
 
@@ -96,23 +96,43 @@ void World::Run() {
         break;
       }
     }
-    MoveEvent move_event(move);
-    client_.SendEvent(move_event);
-
-    Message response(client_.Listen());
-    if (response.ExtractSuccess()) {
-      entities_[player_->id()] = move;
-
-      ViewUpdateEvent view_update_event(61, 13);
-      client_.SendEvent(view_update_event);
-      Message view_update_message(client_.Listen());
-      view_ = view_update_message.ExtractView();
+    switch (action) {
+      case kUp:
+      case kDown:
+      case kLeft:
+      case kRight: {
+        MoveEvent move_event(move);
+        client_.SendEvent(move_event);
+        Message response(client_.Listen());
+        if (!response.ExtractSuccess()) {
+          message_log_.push_back(response.ExtractError());
+          continue;
+        }
+      }
+      default:
+      break;
     }
-    else {
-      std::cout << response.ExtractError() << std::endl;
-    }
+
+    entities_[player_->id()] = move;
+
+    RequestUpdate();
   }
   client_.Disconnect();
+}
+
+void World::RequestUpdate() {
+  ViewUpdateEvent view_update_event(61, 13);
+  client_.SendEvent(view_update_event);
+  Message view_update_message(client_.Listen());
+  view_ = view_update_message.ExtractView();
+  int entity_count = view_update_message.ExtractInt();
+  for (int i = 0; i < entity_count; i++) {
+    boost::uuids::uuid id = view_update_message.ExtractUuid();
+    Position *position = view_update_message.ExtractPosition();
+    std::cout << position->x() << " " << position->y() << std::endl;
+    entities_[id] = *position;
+    delete position;
+  }
 }
 
 void World::Display() {
@@ -128,8 +148,12 @@ void World::Display() {
     for (int x = 0; x < view_->width(); x++) {
       char print_value = view_->GetTile(Position(x, y));
       BOOST_FOREACH(position_map::value_type it, entities_) {
-        if (view_->TranslateGlobal(it.second) == Position(x, y))
-          print_value = '@';
+        if (view_->TranslateGlobal(it.second) == Position(x, y)) {
+          if (it.first == player_->id())
+            print_value = '@';
+          else
+            print_value = 'E';
+        }
       }
       std::cout << print_value;
     }

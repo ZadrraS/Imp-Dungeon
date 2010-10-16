@@ -43,20 +43,21 @@ class Message {
   void InjectSuccess(bool success);
   void InjectError(std::string error);
 
-  const char *buffer() const;
-
- private:
-  MessageType ExtractMessageType();
   int ExtractInt();
   std::string ExtractString();
   boost::uuids::uuid ExtractUuid();
   char *ExtractArray();
 
-  void InjectMessageType(MessageType message_type);
   void InjectInt(int value);
   void InjectString(const std::string &string);
   void InjectUuid(const boost::uuids::uuid &id);
   void InjectArray(const char *array, int size); 
+
+  const char *buffer() const;
+
+ private:
+  MessageType ExtractMessageType();
+  void InjectMessageType(MessageType message_type);
 
   MessageType message_type_;
   char *buffer_;

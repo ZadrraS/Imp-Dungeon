@@ -18,10 +18,10 @@ namespace client {
 
 Client::Client(const std::string &ip, uint16_t port) : socket_(-1) {
   memset(&server_address_, 0, sizeof(server_address_));
-  
+
   server_address_.sin_family = AF_INET;
   server_address_.sin_port = htons(port);
-    
+
   if (inet_aton(ip.c_str(), &server_address_.sin_addr) == 0)
     throw NetworkError("Invalid remote IP address.");
 }
@@ -58,8 +58,10 @@ void Client::SendEvent(Event &event) {
 
 char *Client::Listen() {
   char *buffer = new char[Message::kMaxBufferSize];
-  if (recv(socket_, buffer, Message::kMaxBufferSize, 0) <= 0)
-    throw NetworkError("Error receiving package.");  
+  memset(buffer, 0, Message::kMaxBufferSize);
+  int r_len = recv(socket_, buffer, Message::kMaxBufferSize, 0);
+  if (r_len <= 0)
+    throw NetworkError("Error receiving package. Check your connection.");
   return buffer;
 }
 

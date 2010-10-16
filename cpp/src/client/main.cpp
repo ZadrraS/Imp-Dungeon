@@ -1,13 +1,14 @@
 #include "client/world.h"
 
 #include <iostream>
+#include <exception>
 
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {
   try {
     impdungeon::client::World world("127.0.0.1", 50000);
-    
+
     world.Init();
     world.Run();
   }

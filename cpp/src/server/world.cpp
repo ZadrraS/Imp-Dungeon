@@ -168,12 +168,24 @@ void World::Visit(UseEvent &use_event) {
 }
 
 void World::Visit(ViewUpdateEvent &view_update_event) {
+  typedef boost::unordered_map<boost::uuids::uuid, Position> map;
+
   boost::uuids::uuid source = server_.GetClientId(view_update_event.descriptor());
   View *view = map_->GetView(entities_[source], 
                              view_update_event.width(), 
                              view_update_event.height());
   Message message(Message::kViewUpdateMessage);
   message.InjectView(*view);
+
+  int entity_count = entities_.size();
+  message.InjectInt(entity_count);
+  BOOST_FOREACH(map::value_type entity_value, entities_) {
+    boost::uuids::uuid id = entity_value.first;
+    Position position = entity_value.second;
+    message.InjectUuid(id);
+    message.InjectPosition(position);
+  }
+
   server_.SendMessage(message, view_update_event.descriptor());
   delete view;
 }

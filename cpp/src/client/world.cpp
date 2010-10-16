@@ -53,7 +53,7 @@ void World::Run() {
   }
 
   boost::uuids::uuid player_id = player_->id();
-  ViewUpdateEvent view_update_event(player_id, 61, 13);
+  ViewUpdateEvent view_update_event(61, 13);
   client_.SendEvent(view_update_event);
   Message view_update_message(client_.Listen());
   view_ = view_update_message.ExtractView();
@@ -96,14 +96,14 @@ void World::Run() {
         break;
       }
     }
-    MoveEvent move_event(player_id, move);
+    MoveEvent move_event(move);
     client_.SendEvent(move_event);
-    
+
     Message response(client_.Listen());
     if (response.ExtractSuccess()) {
       entities_[player_->id()] = move;
-      
-      ViewUpdateEvent view_update_event(player_id, 61, 13);
+
+      ViewUpdateEvent view_update_event(61, 13);
       client_.SendEvent(view_update_event);
       Message view_update_message(client_.Listen());
       view_ = view_update_message.ExtractView();

@@ -32,7 +32,7 @@ char *Serializer::SerializeEvent(Event &event) {
 
 Event *Serializer::UnserializeEvent(char *data) {
   size_t offset = 0; 
-  
+
   EventType event_type = ExtractEventType(data, offset);
   Event *event;
 
@@ -45,60 +45,51 @@ Event *Serializer::UnserializeEvent(char *data) {
       break;
     }
     case kLogoffEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
-      
-      event = new LogoffEvent(source);
+      event = new LogoffEvent();
       break;
     }
     case kAttackEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
-      event = new AttackEvent(source, target);
+      event = new AttackEvent(target);
       break;
     }
     case kMoveEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       int x = ExtractInt(data, offset);
       int y = ExtractInt(data, offset);
       Position position(x, y);
 
-      event = new MoveEvent(source, position);
+      event = new MoveEvent(position);
       break;
     }
     case kTakeEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
-      event = new AttackEvent(source, target);    
+      event = new AttackEvent(target);
       break;
     }
     case kDropEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
-      event = new AttackEvent(source, target);
+      event = new AttackEvent(target);
       break;
     }
     case kEquipEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
-      event = new AttackEvent(source, target);
+      event = new AttackEvent(target);
       break;
     }
     case kUseEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       boost::uuids::uuid target = ExtractUuid(data, offset);
 
-      event = new AttackEvent(source, target);
+      event = new AttackEvent(target);
       break;
     }
     case kViewUpdateEvent: {
-      boost::uuids::uuid source = ExtractUuid(data, offset);
       int width = ExtractInt(data, offset);
       int height = ExtractInt(data, offset);
-      event = new ViewUpdateEvent(source, width, height);
+      event = new ViewUpdateEvent(width, height);
       break;
     }
     default: {
@@ -126,7 +117,6 @@ void Serializer::Visit(LogoffEvent &logoff_event) {
   size_t offset = 0;
 
   InsertEventType(kLogoffEvent, storage_, offset);
-  InsertUuid(logoff_event.source(), storage_, offset);
 }
 
 void Serializer::Visit(AttackEvent &attack_event) {
@@ -135,7 +125,6 @@ void Serializer::Visit(AttackEvent &attack_event) {
   size_t offset = 0;
 
   InsertEventType(kAttackEvent, storage_, offset);
-  InsertUuid(attack_event.source(), storage_, offset);
   InsertUuid(attack_event.target(), storage_, offset);
 }
 
@@ -146,7 +135,6 @@ void Serializer::Visit(MoveEvent &move_event) {
   
   // Structure: [EventTypes - 1int][UUID - 36char][Position - 2int]
   InsertEventType(kMoveEvent, storage_, offset);
-  InsertUuid(move_event.source(), storage_, offset);
   int x, y;
   x = move_event.move().x();
   y = move_event.move().y();
@@ -162,7 +150,6 @@ void Serializer::Visit(TakeEvent &take_event) {
   size_t offset = 0;
 
   InsertEventType(kTakeEvent, storage_, offset);
-  InsertUuid(take_event.source(), storage_, offset);
   InsertUuid(take_event.target(), storage_, offset);
 }
 
@@ -172,7 +159,6 @@ void Serializer::Visit(DropEvent &drop_event) {
   size_t offset = 0;
 
   InsertEventType(kDropEvent, storage_, offset);
-  InsertUuid(drop_event.source(), storage_, offset);
   InsertUuid(drop_event.target(), storage_, offset);
 }
 
@@ -182,7 +168,6 @@ void Serializer::Visit(EquipEvent &equip_event) {
   size_t offset = 0;
 
   InsertEventType(kEquipEvent, storage_, offset);
-  InsertUuid(equip_event.source(), storage_, offset);
   InsertUuid(equip_event.target(), storage_, offset);
 }
 
@@ -192,7 +177,6 @@ void Serializer::Visit(UseEvent &use_event) {
   size_t offset = 0;
 
   InsertEventType(kUseEvent, storage_, offset);
-  InsertUuid(use_event.source(), storage_, offset);
   InsertUuid(use_event.target(), storage_, offset);
 }
 
@@ -202,7 +186,6 @@ void Serializer::Visit(ViewUpdateEvent &view_update_event) {
   size_t offset = 0;
 
   InsertEventType(kViewUpdateEvent, storage_, offset);
-  InsertUuid(view_update_event.source(), storage_, offset);
   InsertInt(view_update_event.width(), storage_, offset);
   InsertInt(view_update_event.height(), storage_, offset);
 }

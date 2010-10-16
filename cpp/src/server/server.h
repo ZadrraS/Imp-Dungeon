@@ -29,6 +29,10 @@ class Server {
   void SendMessage(Message &message, int descriptor);
   void Listen();
 
+  boost::uuids::uuid GetClientId(int descriptor);
+  void AddClientId(int descriptor, boost::uuids::uuid id);
+  void RemoveClientId(int descriptor);
+
  private:
   void DisconnectClient(int descriptor);
 

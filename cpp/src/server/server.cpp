@@ -11,6 +11,7 @@
 
 #include "logic/network/networkerror.h"
 #include "logic/network/events/eventhandlerinterface.h"
+#include "logic/network/events/event.h"
 #include "logic/network/message.h"
 
 namespace impdungeon {
@@ -106,6 +107,7 @@ void Server::Listen() {
       else {  // Parse clients sent data
         Event *event = serializer_.UnserializeEvent(buffer);
         if (event != NULL) {
+          event->set_descriptor(descriptor);
           event_handler_.PushEvent(event);
         }
         else {
@@ -116,6 +118,22 @@ void Server::Listen() {
       }
     }
   }
+}
+
+boost::uuids::uuid Server::GetClientId(int descriptor) {
+  // TODO(ZadrraS): Make this not explode when handed a bad descriptor.
+  return client_ids_[descriptor];
+}
+
+void Server::AddClientId(int descriptor, boost::uuids::uuid id) {
+  if (std::find(descriptor_list_.begin(), descriptor_list_.end(), descriptor) !=
+      descriptor_list_.end()) {
+    client_ids_[descriptor] = id;
+  }
+}
+
+void Server::RemoveClientId(int descriptor) {
+  client_ids_.erase(descriptor);
 }
 
 void Server::DisconnectClient(int descriptor) {

@@ -107,12 +107,12 @@ void World::Visit(LoginEvent &login_event) {
     Message message(Message::kEntityDataMessage);
     message.InjectEntity(*entity);
     message.InjectPosition(entities_[entity->id()]);
-    server_.SendMessage(message);
+    server_.SendMessage(message, login_event.descriptor());
   }
   else {
     Message message(Message::kErrorMessage);
     message.InjectError("User does not exist.");
-    server_.SendMessage(message);
+    server_.SendMessage(message, login_event.descriptor());
   }
 }
 
@@ -125,24 +125,25 @@ void World::Visit(AttackEvent &attack_event) {
 }
 
 void World::Visit(MoveEvent &move_event) {
-  if (entity_manager_.GetEntity(move_event.source()) != NULL) {
-    const Position &entity_position = entities_[move_event.source()];
+  boost::uuids::uuid source = server_.GetClientId(move_event.descriptor());
+  if (entity_manager_.GetEntity(source) != NULL) {
+    const Position &entity_position = entities_[source];
     if (map_->IsPassable(move_event.move()) && 
         entity_position.IsNextTo(move_event.move())) {
-      entities_[move_event.source()] = move_event.move();
+      entities_[source] = move_event.move();
       Message message(Message::kEmptyMessage);
-      server_.SendMessage(message);
+      server_.SendMessage(message, move_event.descriptor());
     }
     else {
       Message message(Message::kErrorMessage);
       message.InjectError("Your path is blocked!");
-      server_.SendMessage(message);
+      server_.SendMessage(message, move_event.descriptor());
     }
   }
   else {
     Message message(Message::kErrorMessage);
     message.InjectError("Encountered critical error. Please restart client.");
-    server_.SendMessage(message);
+    server_.SendMessage(message, move_event.descriptor());
   }
 }
 
@@ -162,13 +163,14 @@ void World::Visit(UseEvent &use_event) {
 
 }
 
-void World::Visit(ViewUpdateEvent &view_update_event) { 
-  View *view = map_->GetView(entities_[view_update_event.source()], 
+void World::Visit(ViewUpdateEvent &view_update_event) {
+  boost::uuids::uuid source = server_.GetClientId(view_update_event.descriptor());
+  View *view = map_->GetView(entities_[source], 
                              view_update_event.width(), 
                              view_update_event.height());
   Message message(Message::kViewUpdateMessage);
   message.InjectView(*view);
-  server_.SendMessage(message);
+  server_.SendMessage(message, view_update_event.descriptor());
   delete view;
 }
 

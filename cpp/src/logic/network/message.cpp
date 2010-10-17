@@ -192,7 +192,6 @@ void Message::InjectString(const std::string &string) {
 
 void Message::InjectUuid(const boost::uuids::uuid &id) {
   std::string id_str = boost::lexical_cast<std::string>(id);
-  
   memcpy(buffer_ + position_, id_str.c_str(), id_str.size());
   position_ += id_str.size();
 }

@@ -52,8 +52,10 @@ Position Position::operator-(const Position &arg) const {
 }
 
 Position &Position::operator=(const Position &arg) {
-  x_ = arg.x_;
-  y_ = arg.y_;
+  if (this != &arg) {
+    x_ = arg.x_;
+    y_ = arg.y_;
+  }
   return *this;
 }
 

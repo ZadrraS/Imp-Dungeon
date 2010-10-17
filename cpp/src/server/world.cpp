@@ -107,7 +107,7 @@ void World::Visit(LoginEvent &login_event) {
 
     Message message(Message::kEntityDataMessage);
     message.InjectEntity(*entity);
-    message.InjectPosition(entities_[entity->id()]);
+    message.InjectPosition(position);
     server_.SendMessage(message, login_event.descriptor());
   }
   else {

@@ -25,7 +25,7 @@ class Server {
   ~Server();
 
   void Init();
-  void Disconnect();
+  void DisconnectAll();
 
   void SendMessage(Message &message, int descriptor);
   void Listen();

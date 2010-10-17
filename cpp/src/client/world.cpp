@@ -51,7 +51,7 @@ void World::Run() {
     entities_[player_->id()] = *position;
     delete position;
   }
-
+  std::cout << "========================END===================" << std::endl;
   RequestUpdate();
 
   running_ = true;
@@ -129,7 +129,6 @@ void World::RequestUpdate() {
   for (int i = 0; i < entity_count; i++) {
     boost::uuids::uuid id = view_update_message.ExtractUuid();
     Position *position = view_update_message.ExtractPosition();
-    std::cout << position->x() << " " << position->y() << std::endl;
     entities_[id] = *position;
     delete position;
   }

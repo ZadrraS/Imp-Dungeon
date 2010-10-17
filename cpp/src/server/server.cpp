@@ -29,7 +29,7 @@ Server::Server(uint16_t port, EventHandlerInterface &event_handler)
 }
 
 Server::~Server() {
-  Disconnect();
+  DisconnectAll();
   close(listen_socket_);
 }
 
@@ -44,7 +44,10 @@ void Server::Init() {
   client_manager_.AddClient(listen_socket_);
 }
 
-void Server::Disconnect() {
+void Server::DisconnectAll() {
+  BOOST_FOREACH(int descriptor, client_manager_) {
+    DisconnectClient(descriptor);
+  }
 }
 
 void Server::SendMessage(Message &message, int descriptor) {

@@ -7,8 +7,8 @@
       "y": 10
     },
     "health": {
-      "current": 10,
-      "max": 10
+      "current": 15,
+      "max": 15
     },
     "inventory": [
       "Long sword", 

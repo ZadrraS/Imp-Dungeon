@@ -10,7 +10,6 @@
 #include "logic/map/items/item.h"
 #include "logic/map/attributes/position.h"
 #include "logic/map/view.h"
-#include <iostream>
 
 namespace impdungeon {
 
@@ -36,7 +35,8 @@ Message::~Message() {
 }
 
 Entity *Message::ExtractEntity() {
-  if (message_type_ == kEntityDataMessage) {
+  if (message_type_ == kEntityDataMessage || 
+      message_type_ == kViewUpdateMessage) {
     boost::uuids::uuid source = ExtractUuid();
     std::string name = ExtractString();
     int health_value = ExtractInt();
@@ -144,21 +144,24 @@ int Message::ExtractInt() {
 
 std::string Message::ExtractString() {
   int string_size;
-  char *c_string;
-  memcpy(&string_size, buffer_ + position_, sizeof(string_size));
-  c_string = new char [string_size];
-  position_ += sizeof(string_size);
+  
+  string_size = 0;
+  while (buffer_[position_ + string_size] != '\0')
+    string_size++;
+  string_size++;
+  char c_string[string_size];
   memcpy(c_string, buffer_ + position_, string_size);
   position_ += string_size;
   return std::string(c_string);
 }
 
 boost::uuids::uuid Message::ExtractUuid() {
-  char id_str[36];
-  memcpy(id_str, buffer_ + position_, sizeof(id_str));
+  char id_str[37];
+  memcpy(id_str, buffer_ + position_, sizeof(id_str) - 1);
+  id_str[36] = '\0';
   boost::uuids::string_generator gen;
   boost::uuids::uuid id(gen(std::string(id_str)));
-  position_ += sizeof(id_str);
+  position_ += sizeof(id_str) - 1;
 
   return id;
 }
@@ -184,8 +187,6 @@ void Message::InjectInt(int value) {
 
 void Message::InjectString(const std::string &string) {
   int string_size = string.size() + 1; 
-  memcpy(buffer_ + position_, &string_size, sizeof(string_size));
-  position_ += sizeof(string_size);
   memcpy(buffer_ + position_, string.c_str(), string_size);
   position_ += string_size;
 }

@@ -1,7 +1,7 @@
 #include "logic/network/events/loginevent.h"
 
 #include "logic/network/events/eventvisitorinterface.h"
-
+#include <iostream>
 namespace impdungeon {
 
 LoginEvent::LoginEvent(const std::string &user_name, 

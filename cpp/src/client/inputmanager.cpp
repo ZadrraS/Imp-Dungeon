@@ -24,7 +24,7 @@ ActionType InputManager::GetInput() {
   tcsetattr(STDIN_FILENO, TCSANOW, &new_terminal);
   char input = getchar();
   tcsetattr(STDIN_FILENO, TCSANOW, &old_terminal);
-  
+
   ActionType action;
   switch (input) {
     case 'w': {

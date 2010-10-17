@@ -21,9 +21,9 @@ Message::Message(MessageType message_type)
   InjectMessageType(message_type);
 }
 
-Message::Message(char *buffer) 
-  : message_type_(kInvalidMessage), 
-    buffer_(buffer), 
+Message::Message(char *buffer)
+  : message_type_(kInvalidMessage),
+    buffer_(buffer),
     position_(0) {
   if (buffer_)
     message_type_ = ExtractMessageType();
@@ -35,7 +35,7 @@ Message::~Message() {
 }
 
 Entity *Message::ExtractEntity() {
-  if (message_type_ == kEntityDataMessage || 
+  if (message_type_ == kEntityDataMessage ||
       message_type_ == kViewUpdateMessage) {
     boost::uuids::uuid source = ExtractUuid();
     std::string name = ExtractString();
@@ -73,7 +73,7 @@ View *Message::ExtractView() {
     int pos_y = ExtractInt();
     View *view = new View(view_data, width, height, Position(pos_x, pos_y));
 
-    return view;  
+    return view;
   }
 
   return NULL;
@@ -144,7 +144,7 @@ int Message::ExtractInt() {
 
 std::string Message::ExtractString() {
   int string_size;
-  
+
   string_size = 0;
   while (buffer_[position_ + string_size] != '\0')
     string_size++;

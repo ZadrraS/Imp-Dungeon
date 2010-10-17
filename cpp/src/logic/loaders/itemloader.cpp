@@ -31,7 +31,7 @@ Item *ItemLoader::GetItem(const std::string &name) const {
   try {
     const boost::property_tree::ptree &database_item = 
       root_.get_child(name);
-  
+
     switch (database_item.get<char>("type")) {
       case 'w': {
         item = new Weapon(name, 

@@ -83,8 +83,19 @@ BoundedAttribute EntityLoader::GetHealth(const std::string &name) const {
   return BoundedAttribute(current, max);
 }
 
+Weapon *EntityLoader::GetWeapon(const std::string &name) const {
+  std::string weapon_name;
+  try {
+    weapon_name = root_.get<std::string>(name + ".weapon");
+  }
+  catch(boost::property_tree::ptree_error &exception) {
+    throw MalformedData("Entity weapon data malformed.");
+  }
+  return static_cast<Weapon *>(item_loader_.GetItem(weapon_name));
+}
+
 std::vector<Item *> EntityLoader::GetItems(const std::string &name) const {
-  std::vector<Item *> items;  
+  std::vector<Item *> items;
 
   try {
     BOOST_FOREACH(const boost::property_tree::ptree::value_type &item_value,

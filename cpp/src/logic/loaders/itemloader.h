@@ -15,7 +15,7 @@ class ItemLoader {
   virtual ~ItemLoader();
 
   void Init();
-  
+
   Item *GetItem(const std::string &name) const;
 
  private:

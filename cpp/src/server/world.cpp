@@ -95,9 +95,9 @@ void World::Visit(LoginEvent &login_event) {
     std::vector<Item *> items = entity_loader_->GetItems(user);
     BOOST_FOREACH(Item *item, items) {
       item_manager_.SpawnItem(item);
-      entity->TakeItem(item);  
+      entity->TakeItem(item);
     }
-
+    entity->EquipWeapon(entity_loader_->GetWeapon(user));
     boost::uuids::uuid entity_id = entity_manager_.SpawnEntity(entity);
     entities_[entity_id] = position;
     server_.RegisterClient(login_event.descriptor(), entity_id);

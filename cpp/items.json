@@ -1,11 +1,17 @@
 {
-  "Long sword": { 
+  "Long sword": {
     "value": 20,
-    "type": "w",  
+    "type": "w",
     "min_damage": 6,
     "max_damage": 10
   },
-  "Dagger": { 
+  "Mace": {
+    "value": 10,
+    "type": "w",
+    "min_damage": 4,
+    "max_damage": 12
+  },
+  "Dagger": {
     "value": 5,
     "type": "w",
     "min_damage": 1,

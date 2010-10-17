@@ -13,6 +13,7 @@ namespace impdungeon {
 
 class Item;
 class ItemLoader;
+class Weapon;
 
 class EntityLoader {
  public:
@@ -25,8 +26,9 @@ class EntityLoader {
   bool IsNameRegistered(const std::string &entity_name) const;
   std::string GetPassword(const std::string &entity_name) const;
   std::string GetMap(const std::string &entity_name) const;
-  Position GetPosition(const std::string &entity_name) const;    
+  Position GetPosition(const std::string &entity_name) const;
   BoundedAttribute GetHealth(const std::string &entity_name) const;
+  Weapon *GetWeapon(const std::string &name) const;
 
   std::vector<Item *> GetItems(const std::string &entity_name) const;
 

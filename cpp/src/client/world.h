@@ -28,7 +28,9 @@ class World {
 
  private:
   void RequestUpdate();
+  Position GetCursorTarget();
   void Display();
+  void Display(const Position &mark);
 
   Client client_;
   InputManager input_manager_;

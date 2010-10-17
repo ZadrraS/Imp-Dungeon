@@ -129,11 +129,22 @@ void World::Visit(AttackEvent &attack_event) {
 }
 
 void World::Visit(MoveEvent &move_event) {
+  typedef boost::unordered_map<boost::uuids::uuid, Position> map;
   boost::uuids::uuid source = server_.GetClientId(move_event.descriptor());
+
   if (entity_manager_.GetEntity(source) != NULL) {
     const Position &entity_position = entities_[source];
-    if (map_->IsPassable(move_event.move()) && 
-        entity_position.IsNextTo(move_event.move())) {
+
+    bool entity_blocking = false;
+    BOOST_FOREACH(map::value_type entity_value, entities_) {
+        // Check if an entity other than the player is on the specified tile
+        if (entity_value.second == move_event.move() &&
+            entity_value.first != source) {
+          entity_blocking = true;
+        }
+      }
+    if (map_->IsPassable(move_event.move()) &&
+        entity_position.IsNextTo(move_event.move()) && !entity_blocking) {
       entities_[source] = move_event.move();
       Message message(Message::kEmptyMessage);
       server_.SendMessage(message, move_event.descriptor());

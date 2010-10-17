@@ -11,6 +11,8 @@ enum ActionType {
   kLeft,
   kRight,
   kLook,
+  kAttack,
+  kConfirm,
   kQuit
 };
 

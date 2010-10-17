@@ -51,6 +51,14 @@ ActionType InputManager::GetInput() {
       action = kQuit;
       break;
     }
+    case 'f': {
+      action = kAttack;
+      break;
+    }
+    case 10: {
+      action = kConfirm;
+      break;
+    }
     default: {
       action = kOther;
       break;

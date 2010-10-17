@@ -85,6 +85,10 @@ void World::Run() {
 
         break;
       }
+      case kAttack: {
+        move = GetCursorTarget();
+        break;
+      }
       case kQuit: {
         running_ = false;
         continue;
@@ -95,11 +99,8 @@ void World::Run() {
         break;
       }
     }
-    switch (action) {
-      case kUp:
-      case kDown:
-      case kLeft:
-      case kRight: {
+    if (action == kUp || action == kDown || 
+        action == kLeft || action == kRight) {
         MoveEvent move_event(move);
         client_.SendEvent(move_event);
         Message response(client_.Listen());
@@ -107,9 +108,6 @@ void World::Run() {
           message_log_.push_back(response.ExtractError());
           continue;
         }
-      }
-      default:
-      break;
     }
 
     entities_[player_->id()] = move;
@@ -135,7 +133,50 @@ void World::RequestUpdate() {
   }
 }
 
+Position World::GetCursorTarget() {
+  Position current_pos = entities_[player_->id()];
+  ActionType action;
+  while (true) {
+    Display(current_pos);
+    action = input_manager_.GetInput();
+    switch (action) {
+      case kUp: {
+        current_pos += Position(0, -1);
+        break;
+      }
+      case kDown: {
+        current_pos += Position(0, 1);
+        break;
+      }
+      case kLeft: {
+        current_pos += Position(-1, 0);
+        break;
+      }
+      case kRight: {
+        current_pos += Position(1, 0);
+        break;
+      }
+      case kQuit: {
+        return Position(-1, -1);
+        break;
+      }
+      case kConfirm: {
+        return current_pos;
+        break;
+      }
+      default: {
+
+        break;
+      }
+    }
+  }
+}
+
 void World::Display() {
+  Display(Position(-1, -1));
+}
+
+void World::Display(const Position &mark) {
   typedef boost::unordered_map<boost::uuids::uuid, Position> position_map;
 
   system("clear");
@@ -147,12 +188,17 @@ void World::Display() {
     std::cout << "|";
     for (int x = 0; x < view_->width(); x++) {
       char print_value = view_->GetTile(Position(x, y));
-      BOOST_FOREACH(position_map::value_type it, entities_) {
-        if (view_->TranslateGlobal(it.second) == Position(x, y)) {
-          if (it.first == player_->id())
-            print_value = '@';
-          else
-            print_value = 'E';
+      if (Position(x, y) == view_->TranslateGlobal(mark)) {
+        print_value = '_';
+      }
+      else {
+        BOOST_FOREACH(position_map::value_type it, entities_) {
+          if (view_->TranslateGlobal(it.second) == Position(x, y)) {
+            if (it.first == player_->id())
+              print_value = '@';
+            else
+              print_value = 'E';
+          }
         }
       }
       std::cout << print_value;

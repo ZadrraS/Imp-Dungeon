@@ -71,8 +71,15 @@ Position &Position::operator-=(const Position &arg) {
   return *this;
 }
 
-bool Position::operator==(const Position &arg) {
+bool Position::operator==(const Position &arg) const {
   if (x_ == arg.x_ && y_ == arg.y_)
+    return true;
+
+  return false;
+}
+
+bool Position::operator!=(const Position &arg) const {
+  if (x_ != arg.x_ || y_ != arg.y_)
     return true;
 
   return false;

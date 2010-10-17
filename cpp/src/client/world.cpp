@@ -188,7 +188,8 @@ void World::Display(const Position &mark) {
     std::cout << "|";
     for (int x = 0; x < view_->width(); x++) {
       char print_value = view_->GetTile(Position(x, y));
-      if (Position(x, y) == view_->TranslateGlobal(mark)) {
+      if (mark != Position(-1, -1) && 
+          Position(x, y) == view_->TranslateGlobal(mark)) {
         print_value = '_';
       }
       else {

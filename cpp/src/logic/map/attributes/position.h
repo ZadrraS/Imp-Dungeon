@@ -26,7 +26,8 @@ class Position {
   Position &operator=(const Position &arg);
   Position &operator+=(const Position &arg);
   Position &operator-=(const Position &arg);
-  bool operator==(const Position &arg);
+  bool operator==(const Position &arg) const;
+  bool operator!=(const Position &arg) const;
 
  private:
   int x_, y_;

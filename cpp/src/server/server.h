@@ -5,17 +5,18 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <vector>
+#include <queue>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/unordered_map.hpp>
 
 #include "logic/network/serializer.h"
 #include "server/clientmanager.h"
+#include "logic/network/message.h"
 
 namespace impdungeon {
 
 class EventHandlerInterface;
-class Message;
 
 namespace server {
 
@@ -25,16 +26,20 @@ class Server {
   ~Server();
 
   void Init();
-  void DisconnectAll();
 
-  void SendMessage(Message &message, int descriptor);
   void Listen();
 
   boost::uuids::uuid GetClientId(int descriptor);
   void RegisterClient(int descriptor, boost::uuids::uuid id);
   void DisconnectClient(int descriptor);
+  void DisconnectAll();
+
+  void PushMessage(Message *message, int descriptor);
+  void DispatchMessages();  
 
  private:
+  void SendMessage(Message *message, int descriptor);
+
   int listen_socket_;
 
   struct sockaddr_in server_address_;
@@ -42,6 +47,9 @@ class Server {
   Serializer serializer_;
   EventHandlerInterface &event_handler_;
   ClientManager client_manager_;
+
+  typedef std::pair<Message *, int> message_socket_t;
+  std::queue<message_socket_t> messages_;
 };
 
 }  // namespace server

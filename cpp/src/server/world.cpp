@@ -25,10 +25,11 @@
 namespace impdungeon {
 namespace server {
 
-World::World(const std::string &map_file_name, 
+World::World(uint16_t port,
+             const std::string &map_file_name, 
              const std::string &entity_file_name,
              const std::string &item_file_name) 
-  : server_(50000, *this), 
+  : server_(port, *this), 
     map_(NULL),
     running_(false) {
   item_loader_ = new ItemLoader(item_file_name);
@@ -73,6 +74,7 @@ void World::Init() {
 void World::Run() {
   running_ = true;
   while (running_) {
+    server_.DispatchMessages();
     server_.Listen();
     while (!events_.empty()) {
       Event *event = events_.front();
@@ -105,15 +107,15 @@ void World::Visit(LoginEvent &login_event) {
     std::cout << "Player " << login_event.user_name() 
               << " has just connected." << std::endl;
 
-    Message message(Message::kEntityDataMessage);
-    message.InjectEntity(*entity);
-    message.InjectPosition(position);
-    server_.SendMessage(message, login_event.descriptor());
+    Message *message = new Message(Message::kEntityDataMessage);
+    message->InjectEntity(*entity);
+    message->InjectPosition(position);
+    server_.PushMessage(message, login_event.descriptor());
   }
   else {
-    Message message(Message::kErrorMessage);
-    message.InjectError("User does not exist.");
-    server_.SendMessage(message, login_event.descriptor());
+    Message *message = new Message(Message::kErrorMessage);
+    message->InjectError("User does not exist.");
+    server_.PushMessage(message, login_event.descriptor());
   }
 }
 
@@ -146,19 +148,19 @@ void World::Visit(MoveEvent &move_event) {
     if (map_->IsPassable(move_event.move()) &&
         entity_position.IsNextTo(move_event.move()) && !entity_blocking) {
       entities_[source] = move_event.move();
-      Message message(Message::kEmptyMessage);
-      server_.SendMessage(message, move_event.descriptor());
+      Message *message = new Message(Message::kEmptyMessage);
+      server_.PushMessage(message, move_event.descriptor());
     }
     else {
-      Message message(Message::kErrorMessage);
-      message.InjectError("Your path is blocked!");
-      server_.SendMessage(message, move_event.descriptor());
+      Message *message = new Message(Message::kErrorMessage);
+      message->InjectError("Your path is blocked!");
+      server_.PushMessage(message, move_event.descriptor());
     }
   }
   else {
-    Message message(Message::kErrorMessage);
-    message.InjectError("Encountered critical error. Please restart client.");
-    server_.SendMessage(message, move_event.descriptor());
+    Message *message = new Message(Message::kErrorMessage);
+    message->InjectError("Encountered critical error. Please restart client.");
+    server_.PushMessage(message, move_event.descriptor());
   }
 }
 
@@ -185,19 +187,28 @@ void World::Visit(ViewUpdateEvent &view_update_event) {
   View *view = map_->GetView(entities_[source], 
                              view_update_event.width(), 
                              view_update_event.height());
-  Message message(Message::kViewUpdateMessage);
-  message.InjectView(*view);
+  Message *message = new Message(Message::kViewUpdateMessage);
+  message->InjectView(*view);
 
   int entity_count = entities_.size();
-  message.InjectInt(entity_count);
+  message->InjectInt(entity_count);
   BOOST_FOREACH(map::value_type entity_value, entities_) {
     boost::uuids::uuid id = entity_value.first;
     Position position = entity_value.second;
-    message.InjectUuid(id);
-    message.InjectPosition(position);
+    message->InjectUuid(id);
+    message->InjectPosition(position);
   }
 
-  server_.SendMessage(message, view_update_event.descriptor());
+  int item_count = items_.size();
+  message->InjectInt(item_count);
+  BOOST_FOREACH(map::value_type item_value, items_) {
+    boost::uuids::uuid id = item_value.first;
+    Position position = item_value.second;
+    message->InjectUuid(id);
+    message->InjectPosition(position);
+  }
+
+  server_.PushMessage(message, view_update_event.descriptor());
   delete view;
 }
 

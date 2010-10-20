@@ -29,7 +29,8 @@ namespace server {
 class World : public EventVisitorInterface,
               public EventHandlerInterface {
  public:
-  World(const std::string &map_file_name, 
+  World(uint16_t port,
+        const std::string &map_file_name, 
         const std::string &entity_file_name,
         const std::string &item_file_name);
   virtual ~World();

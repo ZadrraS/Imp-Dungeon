@@ -6,8 +6,17 @@
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {
+  if (argc != 3) {
+    std::cout << "USAGE: " << argv[0] << " <ip> <port>" << std::endl;
+    return 0;
+  }
   try {
-    impdungeon::client::World world("127.0.0.1", 50000);
+    std::string ip = argv[1];
+    int port = atoi(argv[2]);
+    if (port < 1 || port > 65535)
+      throw impdungeon::NetworkError("Invalid port specified.");
+
+    impdungeon::client::World world(ip, port);
 
     world.Init();
     world.Run();

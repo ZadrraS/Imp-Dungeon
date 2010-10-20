@@ -1,4 +1,4 @@
-all:
+all: server.exe client.exe 
 	make all -C src
 	mv src/server.exe ./
 	mv src/client.exe ./

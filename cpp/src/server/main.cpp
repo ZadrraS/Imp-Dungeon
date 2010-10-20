@@ -5,9 +5,16 @@
 #include "logic/network/networkerror.h"
 
 int main(int argc, char *argv[]) {
-  impdungeon::server::World world("box", "entities.json", "items.json") ;
-  
+  if (argc != 2) {
+    std::cout << "USAGE: " << argv[0] << " <port>" << std::endl;
+    return 0;
+  }
   try {
+    int port = atoi(argv[1]);
+    if (port < 1 || port > 65535)
+      throw impdungeon::NetworkError("Invalid port specified.");
+
+    impdungeon::server::World world(port, "box", "entities.json", "items.json") ;
     world.Init();
     world.Run();
   }

@@ -8,6 +8,7 @@
 
 #include "logic/map/entity.h"
 #include "logic/map/items/item.h"
+#include "logic/map/items/weapon.h"
 #include "logic/map/attributes/position.h"
 #include "logic/map/view.h"
 
@@ -29,9 +30,26 @@ Message::Message(char *buffer)
     message_type_ = ExtractMessageType();
 }
 
+Message::Message(const Message &message) {
+  message_type_ = message.message_type_;
+  position_ = message.position_;
+
+  if (buffer_)
+    delete [] buffer_;
+  memcpy(buffer_, message.buffer_, kMaxBufferSize);
+}
+
 Message::~Message() {
   if (buffer_)
     delete [] buffer_;
+}
+
+Message &Message::operator=(const Message &message) {
+  if (buffer_)
+    delete [] buffer_;
+  memcpy(buffer_, message.buffer_, kMaxBufferSize);
+
+  return *this;
 }
 
 Entity *Message::ExtractEntity() {
@@ -46,6 +64,13 @@ Entity *Message::ExtractEntity() {
     Entity *entity = new Entity(name, health);
     entity->AssignId(source);
 
+    std::string weapon_name = ExtractString();
+    int value = ExtractInt();
+    int min_damage = ExtractInt();
+    int max_damage = ExtractInt();
+    Weapon *weapon = new Weapon(weapon_name, value, min_damage, max_damage);
+    weapon->Equip(*entity);
+
     return entity;
   }
 
@@ -53,6 +78,7 @@ Entity *Message::ExtractEntity() {
 }
 
 Item *Message::ExtractItem() {
+  // TODO(ZadrraS): Item extraction
   return NULL;
 }
 
@@ -95,10 +121,14 @@ void Message::InjectEntity(const Entity &entity) {
   InjectString(entity.name());
   InjectInt(entity.health().value());
   InjectInt(entity.health().bound());
+  InjectString(entity.weapon()->name());
+  InjectInt(entity.weapon()->value());
+  InjectInt(entity.weapon()->min_damage());
+  InjectInt(entity.weapon()->max_damage());
 }
 
 void Message::InjectItem(const Item &item) {
-  // TODO(ZadrraS): Do it.
+  // TODO(ZadrraS): Item injection
 }
 
 void Message::InjectPosition(const Position &position) {
@@ -132,6 +162,14 @@ Message::MessageType Message::ExtractMessageType() {
   position_ += sizeof(MessageType);
 
   return message_type;
+}
+
+char Message::ExtractChar() {
+  char result;
+  memcpy(&result, buffer_ + position_, sizeof(result));
+  position_ += sizeof(result);
+
+  return result;
 }
 
 int Message::ExtractInt() {
@@ -178,6 +216,11 @@ char *Message::ExtractArray() {
 void Message::InjectMessageType(MessageType message_type) {
   memcpy(buffer_ + position_, &message_type, sizeof(MessageType));
   position_ += sizeof(MessageType);
+}
+
+void Message::InjectChar(char value) {
+  memcpy(buffer_ + position_, &value, sizeof(value));
+  position_ += sizeof(value);
 }
 
 void Message::InjectInt(int value) {

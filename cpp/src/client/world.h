@@ -39,6 +39,7 @@ class World {
   Entity *player_;
 
   boost::unordered_map<boost::uuids::uuid, Position> entities_;
+  boost::unordered_map<boost::uuids::uuid, Position> items_;
 
   std::vector<std::string> message_log_;
 

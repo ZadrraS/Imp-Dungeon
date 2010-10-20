@@ -27,7 +27,11 @@ class Message {
 
   Message(MessageType message_type);
   explicit Message(char *buffer);
+  Message(const Message &message);
   virtual ~Message();
+  
+  Message &operator=(const Message &message);
+  
 
   Entity *ExtractEntity();
   Item *ExtractItem();
@@ -43,11 +47,13 @@ class Message {
   void InjectSuccess(bool success);
   void InjectError(std::string error);
 
+  char ExtractChar();
   int ExtractInt();
   std::string ExtractString();
   boost::uuids::uuid ExtractUuid();
   char *ExtractArray();
 
+  void InjectChar(char value);
   void InjectInt(int value);
   void InjectString(const std::string &string);
   void InjectUuid(const boost::uuids::uuid &id);

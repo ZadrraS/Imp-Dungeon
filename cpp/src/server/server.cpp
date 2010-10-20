@@ -30,7 +30,6 @@ Server::Server(uint16_t port, EventHandlerInterface &event_handler)
 
 Server::~Server() {
   DisconnectAll();
-  close(listen_socket_);
 }
 
 void Server::Init() {
@@ -42,31 +41,6 @@ void Server::Init() {
     throw NetworkError("Error binding listening socket.");
 
   client_manager_.AddClient(listen_socket_);
-}
-
-void Server::DisconnectAll() {
-  BOOST_FOREACH(int descriptor, client_manager_) {
-    DisconnectClient(descriptor);
-  }
-}
-
-void Server::SendMessage(Message &message, int descriptor) {
-  if (client_manager_.HasClient(descriptor)) {
-    int s_len = send(descriptor, message.buffer(), Message::kMaxBufferSize, 0);
-    if (s_len <= 0) {
-      std::cout << "Client " << descriptor
-                << " is not listening. Kicking from server..." << std::endl;
-
-      if (client_manager_.IsClientRegistered(descriptor)) {
-        Event *kick_event = new LogoffEvent();
-        kick_event->set_descriptor(descriptor);
-        event_handler_.PushEvent(kick_event);
-      }
-      else {
-        DisconnectClient(descriptor);
-      }
-    }
-  }
 }
 
 void Server::Listen() {
@@ -156,6 +130,44 @@ void Server::RegisterClient(int descriptor, boost::uuids::uuid id) {
 void Server::DisconnectClient(int descriptor) {
   client_manager_.RemoveClient(descriptor);
   close(descriptor);
+}
+
+void Server::DisconnectAll() {
+  BOOST_FOREACH(int descriptor, client_manager_) {
+    DisconnectClient(descriptor);
+  }
+}
+
+void Server::PushMessage(Message *message, int descriptor) {
+  messages_.push(message_socket_t(message, descriptor));
+}
+
+void Server::DispatchMessages() {
+  while (!messages_.empty()) {
+    message_socket_t message_socket = messages_.front();
+    SendMessage(message_socket.first, message_socket.second);
+    delete message_socket.first;
+    messages_.pop();
+  }
+}
+
+void Server::SendMessage(Message *message, int descriptor) {
+  if (client_manager_.HasClient(descriptor)) {
+    int s_len = send(descriptor, message->buffer(), Message::kMaxBufferSize, 0);
+    if (s_len <= 0) {
+      std::cout << "Client " << descriptor
+                << " is not listening. Kicking from server..." << std::endl;
+
+      if (client_manager_.IsClientRegistered(descriptor)) {
+        Event *kick_event = new LogoffEvent();
+        kick_event->set_descriptor(descriptor);
+        event_handler_.PushEvent(kick_event);
+      }
+      else {
+        DisconnectClient(descriptor);
+      }
+    }
+  }
 }
 
 }  // namespace server

@@ -53,5 +53,9 @@ BoundedAttribute Entity::health() const {
   return health_;
 }
 
+const Weapon *Entity::weapon() const {
+  return weapon_;
+}
+
 }  // namespace impdungeon
 

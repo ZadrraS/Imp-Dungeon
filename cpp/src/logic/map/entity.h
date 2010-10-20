@@ -34,6 +34,7 @@ class Entity {
   boost::uuids::uuid id() const;
   std::string name() const;
   BoundedAttribute health() const;
+  const Weapon *weapon() const;
 
  private:
   boost::uuids::uuid id_;

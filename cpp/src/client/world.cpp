@@ -12,6 +12,7 @@
 
 #include "logic/map/view.h"
 #include "logic/map/entity.h"
+#include "logic/map/items/weapon.h"
 
 namespace impdungeon {
 namespace client {
@@ -121,6 +122,8 @@ void World::RequestUpdate() {
   ViewUpdateEvent view_update_event(61, 13);
   client_.SendEvent(view_update_event);
   Message view_update_message(client_.Listen());
+  if (view_)
+    delete view_;
   view_ = view_update_message.ExtractView();
   entities_.clear();
 
@@ -129,6 +132,15 @@ void World::RequestUpdate() {
     boost::uuids::uuid id = view_update_message.ExtractUuid();
     Position *position = view_update_message.ExtractPosition();
     entities_[id] = *position;
+    delete position;
+  }
+
+  items_.clear();
+  int item_count = view_update_message.ExtractInt();
+  for (int i = 0; i < item_count; i++) {
+    boost::uuids::uuid id = view_update_message.ExtractUuid();
+    Position *position = view_update_message.ExtractPosition();
+    items_[id] = *position;
     delete position;
   }
 }
@@ -193,9 +205,13 @@ void World::Display(const Position &mark) {
         print_value = '_';
       }
       else {
-        BOOST_FOREACH(position_map::value_type it, entities_) {
-          if (view_->TranslateGlobal(it.second) == Position(x, y)) {
-            if (it.first == player_->id())
+        BOOST_FOREACH(position_map::value_type item_value, items_) {
+          if (view_->TranslateGlobal(item_value.second) == Position(x, y))
+              print_value = '/';
+        }
+        BOOST_FOREACH(position_map::value_type entity_value, entities_) {
+          if (view_->TranslateGlobal(entity_value.second) == Position(x, y)) {
+            if (entity_value.first == player_->id())
               print_value = '@';
             else
               print_value = 'E';
@@ -204,7 +220,20 @@ void World::Display(const Position &mark) {
       }
       std::cout << print_value;
     }
-    std::cout << "|" << std::endl;
+    std::cout << "|";
+    if (y == 4)
+      std::cout << "   " << player_->name();
+    else if (y == 6)
+      std::cout << " HP: " << player_->health().value() << "/" 
+                << player_->health().value();
+    else if (y == 8)
+      std::cout << "Weapon:";
+    else if (y == 9) {
+      std::cout << "  " <<  player_->weapon()->name();
+      std::cout << ", dmg: " << player_->weapon()->min_damage() << "-"
+                << player_->weapon()->max_damage(); 
+      }
+    std::cout << std::endl;
   }
 
   std::cout << "\\";
